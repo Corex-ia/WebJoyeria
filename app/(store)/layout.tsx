@@ -1,42 +1,70 @@
 import Navbar from "@/components/Navbar";
+import MobileNav from "@/components/MobileNav";
+import Link from "next/link";
 
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
-      <footer className="bg-dark text-white mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">💎</span>
-                <span className="font-serif font-bold text-gold-400 text-lg">Joyería Oasis</span>
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Fabricamos joyas de oro 10k en Guatemala. Cada pieza es única, hecha con amor y los mejores materiales.
+      <main className="pb-16 md:pb-0">{children}</main>
+      <MobileNav />
+
+      <footer className="bg-ink text-white">
+        {/* Top strip */}
+        <div className="border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12">
+            {/* Brand */}
+            <div className="md:col-span-2">
+              <p className="font-serif text-3xl font-light text-white mb-2" style={{ fontFamily: "var(--font-cormorant)" }}>
+                Joyería Oasis
+              </p>
+              <span className="label-caps text-gold-400 block mb-6">Oro 10k · Guatemala</span>
+              <p className="text-white/50 text-sm leading-relaxed max-w-xs">
+                Cada pieza que creamos lleva el sello de la artesanía guatemalteca — oro 10k trabajado con precisión y amor desde nuestro taller.
               </p>
             </div>
+
+            {/* Colecciones */}
             <div>
-              <h4 className="font-semibold text-gold-400 mb-3">Colecciones</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="/productos" className="hover:text-gold-400 transition-colors">Toda la tienda</a></li>
-                <li><a href="/productos?cat=coleccion-primavera" className="hover:text-gold-400 transition-colors">Primavera</a></li>
-                <li><a href="/productos?cat=coleccion-kids" className="hover:text-gold-400 transition-colors">Kids</a></li>
-                <li><a href="/productos?cat=coleccion-aurea" className="hover:text-gold-400 transition-colors">Aurea</a></li>
+              <p className="label-caps text-gold-500 mb-6">Colecciones</p>
+              <ul className="space-y-3">
+                {[
+                  ["Tienda completa", "/productos"],
+                  ["Primavera", "/productos?cat=coleccion-primavera"],
+                  ["Aurea", "/productos?cat=coleccion-aurea"],
+                  ["Kids", "/productos?cat=coleccion-kids"],
+                  ["Aretes", "/productos?cat=aretes"],
+                ].map(([label, href]) => (
+                  <li key={href}>
+                    <Link href={href} className="text-white/50 hover:text-gold-400 text-sm transition-colors duration-200">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
+
+            {/* Contacto */}
             <div>
-              <h4 className="font-semibold text-gold-400 mb-3">Contacto</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
+              <p className="label-caps text-gold-500 mb-6">Contacto</p>
+              <ul className="space-y-3 text-sm text-white/50">
                 <li>Guatemala, C.A.</li>
                 <li>joyeriaoasis.com</li>
-                <li>Envíos a todo el país</li>
+                <li className="pt-2 text-white/30">Envíos a todo el país</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-10 pt-6 text-center text-xs text-gray-600">
-            © {new Date().getFullYear()} Joyería Oasis. Todos los derechos reservados.
+        </div>
+
+        {/* Bottom */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="label-caps text-white/25">
+            © {new Date().getFullYear()} Joyería Oasis — Todos los derechos reservados
+          </p>
+          <div className="flex items-center gap-1">
+            <span className="block w-8 h-px bg-gold-700" />
+            <span className="text-gold-700 text-xs mx-2">✦</span>
+            <span className="block w-8 h-px bg-gold-700" />
           </div>
         </div>
       </footer>
