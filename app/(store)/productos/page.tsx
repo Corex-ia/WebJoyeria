@@ -1,6 +1,6 @@
-import { Suspense } from "react";
 import { createClient } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
+import Link from "next/link";
 import type { Product, Category } from "@/lib/supabase";
 
 export const dynamic = 'force-dynamic';
@@ -50,92 +50,114 @@ export default async function ProductosPage({ searchParams }: Props) {
   const activeCategory = categories.find((c) => c.slug === cat);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-bold text-gray-900">
-          {activeCategory ? activeCategory.name : "Toda la tienda"}
-        </h1>
-        <p className="text-gray-500 mt-1 text-sm">
-          {products.length} producto{products.length !== 1 ? "s" : ""}
-        </p>
+    <div className="bg-surface-100 min-h-screen">
+      {/* Page header */}
+      <div className="bg-surface-200 border-b border-surface-300 pt-28 pb-12 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <p className="label-u text-gold-500 mb-3">
+            {activeCategory ? activeCategory.name : "Tienda completa"}
+          </p>
+          <h1
+            className="font-serif text-ink"
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(2.5rem, 5vw, 4rem)",
+              fontWeight: 400,
+              lineHeight: 1,
+            }}
+          >
+            {activeCategory ? activeCategory.name : "Toda la tienda"}
+          </h1>
+          <p className="label-u text-ink-soft mt-4">
+            {products.length} pieza{products.length !== 1 ? "s" : ""}
+          </p>
+        </div>
       </div>
 
-      <div className="flex gap-8">
-        {/* Sidebar filters */}
-        <aside className="hidden lg:block w-48 flex-shrink-0">
-          <h3 className="font-semibold text-gray-800 mb-4 text-sm uppercase tracking-wide">Categorías</h3>
-          <nav className="space-y-1">
-            <a
-              href="/productos"
-              className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                !cat
-                  ? "bg-gold-100 text-gold-800 font-semibold"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gold-700"
-              }`}
-            >
-              Todas
-            </a>
-            {categories.map((c) => (
-              <a
-                key={c.id}
-                href={`/productos?cat=${c.slug}`}
-                className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                  cat === c.slug
-                    ? "bg-gold-100 text-gold-800 font-semibold"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gold-700"
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+        <div className="flex gap-12">
+
+          {/* Sidebar — desktop */}
+          <aside className="hidden lg:block w-44 flex-shrink-0">
+            <p className="label-u text-gold-500 mb-6">Colecciones</p>
+            <nav className="space-y-1">
+              <Link
+                href="/productos"
+                className={`block py-2 label-u transition-colors duration-200 border-l-2 pl-3 ${
+                  !cat
+                    ? "border-gold-400 text-ink"
+                    : "border-transparent text-ink-soft hover:text-ink hover:border-surface-400"
                 }`}
               >
-                {c.name}
-              </a>
-            ))}
-          </nav>
-        </aside>
+                Todas
+              </Link>
+              {categories.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/productos?cat=${c.slug}`}
+                  className={`block py-2 label-u transition-colors duration-200 border-l-2 pl-3 ${
+                    cat === c.slug
+                      ? "border-gold-400 text-ink"
+                      : "border-transparent text-ink-soft hover:text-ink hover:border-surface-400"
+                  }`}
+                >
+                  {c.name}
+                </Link>
+              ))}
+            </nav>
+          </aside>
 
-        {/* Main content */}
-        <div className="flex-1">
-          {/* Mobile category pills */}
-          <div className="lg:hidden flex gap-2 overflow-x-auto pb-3 mb-6 -mx-1 px-1">
-            <a
-              href="/productos"
-              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                !cat
-                  ? "bg-gold-600 text-white border-gold-600"
-                  : "border-gray-300 text-gray-600 hover:border-gold-400"
-              }`}
-            >
-              Todas
-            </a>
-            {categories.map((c) => (
-              <a
-                key={c.id}
-                href={`/productos?cat=${c.slug}`}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  cat === c.slug
-                    ? "bg-gold-600 text-white border-gold-600"
-                    : "border-gray-300 text-gray-600 hover:border-gold-400"
+          {/* Main */}
+          <div className="flex-1 min-w-0">
+            {/* Mobile category scroll */}
+            <div className="lg:hidden flex gap-6 overflow-x-auto pb-4 mb-8 border-b border-surface-300">
+              <Link
+                href="/productos"
+                className={`flex-shrink-0 label-u pb-3 border-b-2 transition-colors duration-200 ${
+                  !cat ? "border-gold-400 text-ink" : "border-transparent text-ink-soft"
                 }`}
               >
-                {c.name}
-              </a>
-            ))}
-          </div>
-
-          {products.length === 0 ? (
-            <div className="text-center py-20 text-gray-500">
-              <div className="text-5xl mb-4">💎</div>
-              <p className="text-lg font-medium">No hay productos disponibles</p>
-              <p className="text-sm mt-2">
-                {cat ? "Prueba otra categoría." : "Los productos aparecerán aquí una vez configurada la base de datos."}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
-              {products.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                Todas
+              </Link>
+              {categories.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/productos?cat=${c.slug}`}
+                  className={`flex-shrink-0 label-u pb-3 border-b-2 transition-colors duration-200 ${
+                    cat === c.slug ? "border-gold-400 text-ink" : "border-transparent text-ink-soft"
+                  }`}
+                >
+                  {c.name}
+                </Link>
               ))}
             </div>
-          )}
+
+            {products.length === 0 ? (
+              <div className="text-center py-32">
+                <div
+                  className="mx-auto mb-6 opacity-20"
+                  style={{ width: 64, height: 64, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
+                />
+                <p
+                  className="font-serif text-ink/40"
+                  style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 400 }}
+                >
+                  {cat ? "No hay productos en esta colección." : "No hay productos disponibles."}
+                </p>
+                {cat && (
+                  <Link href="/productos" className="label-u text-gold-500 hover:text-gold-400 mt-6 inline-block transition-colors">
+                    Ver toda la tienda
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                {products.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
