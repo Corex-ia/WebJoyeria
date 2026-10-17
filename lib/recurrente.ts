@@ -2,7 +2,10 @@
 // Docs: https://developers.recurrente.com
 
 const API_URL = process.env.RECURRENTE_API_URL || "https://app.recurrente.com/api";
-const API_KEY = process.env.RECURRENTE_API_KEY || "";
+// Recurrente uses two keys: public (X-PUBLIC-KEY) and secret (X-SECRET-KEY).
+// Set RECURRENTE_PUBLIC_KEY + RECURRENTE_SECRET_KEY, or fall back to RECURRENTE_API_KEY for both.
+const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || process.env.RECURRENTE_API_KEY || "";
+const SECRET_KEY = process.env.RECURRENTE_SECRET_KEY || process.env.RECURRENTE_API_KEY || "";
 
 export type RecurrenteCheckout = {
   id: string;
@@ -28,7 +31,8 @@ export async function createCheckout(params: {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-PUBLIC-KEY": API_KEY,
+      "X-PUBLIC-KEY": PUBLIC_KEY,
+      "X-SECRET-KEY": SECRET_KEY,
     },
     body: JSON.stringify({
       items: params.items,
