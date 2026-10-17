@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
 import type { Product, Category } from "@/lib/supabase";
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   searchParams: Promise<{ cat?: string; q?: string }>;
 }

@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
 import type { Category, Product } from "@/lib/supabase";
 
+export const dynamic = 'force-dynamic';
+
 async function getFeaturedProducts(): Promise<Product[]> {
   const supabase = createClient();
   const { data } = await supabase
