@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
+import AnimateReveal from "@/components/AnimateReveal";
 import type { Product } from "@/lib/supabase";
-import { ArrowRight } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 async function getFeaturedProducts(): Promise<Product[]> {
   const supabase = createClient();
@@ -18,10 +19,19 @@ async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 const COLLECTIONS = [
-  { slug: "coleccion-primavera", label: "Primavera", desc: "Color y frescura en oro 10k", num: "01" },
-  { slug: "coleccion-aurea",     label: "Aurea",     desc: "Elegancia atemporal",         num: "02" },
-  { slug: "coleccion-kids",      label: "Kids",      desc: "Joyas para los más pequeños", num: "03" },
-  { slug: "aretes",              label: "Aretes",    desc: "Diseños únicos",               num: "04" },
+  { slug: "coleccion-primavera", label: "Colección Primavera", desc: "Color y frescura en oro 10k", num: "01" },
+  { slug: "coleccion-aurea",     label: "Colección Aurea",     desc: "Elegancia atemporal",         num: "02" },
+  { slug: "coleccion-kids",      label: "Colección Kids",      desc: "Joyas para los más pequeños", num: "03" },
+  { slug: "aretes",              label: "Aretes",              desc: "Diseños únicos y delicados",   num: "04" },
+];
+
+const MARQUEE_ITEMS = [
+  "Oro 10k puro",
+  "Hecho en Guatemala",
+  "Diseño artesanal",
+  "Envíos a todo el país",
+  "Cada pieza, única",
+  "Garantía de calidad",
 ];
 
 export default async function HomePage() {
@@ -29,269 +39,357 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ════════════════════════════════════════════════════════
-          DESKTOP LAYOUT
-      ════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════
+          DESKTOP
+      ══════════════════════════════════════ */}
       <div className="hidden md:block">
 
         {/* ── Hero ── */}
-        <section className="relative min-h-screen bg-ink flex flex-col justify-end overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 80% 60% at 70% 40%, #2D1F0A 0%, #0D0B08 100%)" }}
-          />
-          <div
-            className="absolute top-1/4 right-1/3 w-[600px] h-[600px] rounded-full opacity-10"
-            style={{ background: "radial-gradient(circle, #D4A84B 0%, transparent 70%)" }}
-          />
-          <div className="relative z-10 max-w-7xl mx-auto px-12 pb-24 pt-40">
-            <div className="flex items-center gap-4 mb-10 animate-fade-up">
-              <span className="gold-line-lg" />
-              <span className="label-caps text-gold-400">Joyería Artesanal Guatemalteca</span>
-            </div>
+        <section className="relative min-h-screen bg-white flex flex-col items-center justify-center overflow-hidden">
+          {/* Decorative rings */}
+          <div className="ring-deco" style={{ width: 700, height: 700, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+          <div className="ring-deco" style={{ width: 500, height: 500, top: "50%", left: "50%", transform: "translate(-50%,-50%)", borderColor: "rgba(201,168,76,0.08)" }} />
+          <div className="ring-deco" style={{ width: 300, height: 300, top: "50%", left: "50%", transform: "translate(-50%,-50%)", borderColor: "rgba(201,168,76,0.06)" }} />
+
+          {/* Content */}
+          <div className="relative z-10 text-center px-8 max-w-4xl">
+            <p className="hero-a0 label-u text-ink-soft mb-10 tracking-[0.3em]">
+              Joyería Artesanal · Guatemala · Oro 10k
+            </p>
+
             <h1
-              className="font-serif text-white animate-fade-up-delay-1"
+              className="hero-a1 font-serif text-ink"
               style={{
-                fontFamily: "var(--font-cormorant)",
-                fontSize: "clamp(4rem, 10vw, 9rem)",
-                fontWeight: 300,
-                lineHeight: 0.92,
-                letterSpacing: "-0.02em",
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(5rem, 13vw, 11rem)",
+                fontWeight: 400,
+                lineHeight: 0.88,
+                letterSpacing: "-0.03em",
               }}
             >
-              Joyas que<br />
-              <em className="not-italic" style={{ color: "#D4A84B" }}>cuentan</em><br />
-              historias
+              Diseñadas<br />
+              <em style={{ fontStyle: "italic", color: "var(--gold)" }}>con alma</em>
             </h1>
-            <div className="mt-12 flex items-center gap-6 animate-fade-up-delay-2">
-              <p className="text-white/40 text-sm leading-relaxed max-w-xs">
-                Oro 10k fabricado a mano en Guatemala.<br />Cada pieza, única.
-              </p>
-              <div className="flex items-center gap-4">
-                <Link href="/productos" className="btn-gold">
-                  Ver colección <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/productos?cat=coleccion-primavera" className="btn-outline-light">
-                  Primavera
-                </Link>
-              </div>
+
+            <p className="hero-a2 text-ink-soft text-base leading-relaxed mt-10 max-w-sm mx-auto">
+              Joyas de oro 10k fabricadas a mano en Guatemala.<br />
+              Cada pieza lleva una historia.
+            </p>
+
+            <div className="hero-a3 flex items-center justify-center gap-4 mt-10">
+              <Link href="/productos" className="btn-primary">
+                Ver colección
+              </Link>
+              <Link href="/productos?cat=coleccion-primavera" className="btn-secondary">
+                Primavera 2025
+              </Link>
             </div>
-            <div className="mt-20 flex items-center gap-3 animate-fade-up-delay-3">
-              <span className="block w-px h-8 bg-gold-600 animate-pulse" />
-              <span className="label-caps text-white/25">Explorar</span>
-            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="hero-a4 absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+            <span className="label-u text-ink/25" style={{ fontSize: "0.5rem", letterSpacing: "0.25em" }}>Descubrir</span>
+            <div className="scroll-line" />
           </div>
         </section>
 
-        {/* ── Collections ── */}
-        <section className="bg-cream py-28">
+        {/* ── Marquee strip ── */}
+        <div className="border-y border-surface-300 py-5 overflow-hidden bg-surface-100 select-none">
+          <div className="marquee-track">
+            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+              <span key={i} className="label-u text-ink-soft mx-14 flex items-center gap-14">
+                {item}
+                <span className="w-px h-3 bg-gold-300 inline-block" />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Collections (numbered list, hover inverts) ── */}
+        <section className="bg-white py-28">
           <div className="max-w-7xl mx-auto px-12">
-            <div className="flex items-end justify-between mb-16">
-              <div>
-                <span className="label-caps text-gold-500 block mb-4">Nuestras colecciones</span>
-                <h2 className="font-serif text-ink" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 300, lineHeight: 1.1 }}>
-                  Diseñadas con propósito,<br /><em className="not-italic text-gold-500">hechas con amor</em>
-                </h2>
-              </div>
-              <Link href="/productos" className="flex items-center gap-2 label-caps text-ink/40 hover:text-gold-500 transition-colors duration-300">
-                Ver todo <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {COLLECTIONS.map((col) => (
-                <Link key={col.slug} href={`/productos?cat=${col.slug}`}
-                  className="group relative bg-ink overflow-hidden aspect-[3/4] flex flex-col justify-between p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="label-caps text-gold-500">{col.num}</span>
-                    <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-gold-400 group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
-                    style={{ background: "radial-gradient(circle at center, #D4A84B, transparent 70%)" }} />
-                  <div>
-                    <p className="font-serif text-white text-2xl font-light mb-1 group-hover:text-gold-300 transition-colors duration-300"
-                      style={{ fontFamily: "var(--font-cormorant)" }}>
-                      {col.label}
-                    </p>
-                    <p className="text-white/40 text-xs">{col.desc}</p>
-                  </div>
+
+            <AnimateReveal>
+              <div className="flex items-end justify-between mb-12 pb-8 border-b border-surface-300">
+                <div>
+                  <p className="label-u text-gold-500 mb-4">Nuestras colecciones</p>
+                  <h2
+                    className="font-serif text-ink"
+                    style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 400, lineHeight: 1.05 }}
+                  >
+                    Explorar
+                  </h2>
+                </div>
+                <Link href="/productos" className="label-u text-ink-soft hover:text-gold-500 transition-colors flex items-center gap-2">
+                  Ver todo <ArrowUpRight className="w-3 h-3" />
                 </Link>
+              </div>
+            </AnimateReveal>
+
+            <div>
+              {COLLECTIONS.map((col, idx) => (
+                <AnimateReveal key={col.slug} delay={idx * 80}>
+                  <Link
+                    href={`/productos?cat=${col.slug}`}
+                    className="group flex items-center justify-between py-7 border-b border-surface-300
+                               hover:bg-ink transition-all duration-500 px-0 hover:px-8 -mx-0 hover:-mx-12"
+                    style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+                  >
+                    <div className="flex items-center gap-10">
+                      <span
+                        className="font-serif text-outline-gold text-5xl font-normal leading-none
+                                   group-hover:text-gold-400 transition-all duration-500"
+                        style={{ fontFamily: "var(--font-serif)", fontWeight: 300 }}
+                      >
+                        {col.num}
+                      </span>
+                      <span
+                        className="font-serif text-ink text-2xl font-normal group-hover:text-white transition-colors duration-500"
+                        style={{ fontFamily: "var(--font-serif)" }}
+                      >
+                        {col.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="label-u text-ink-soft group-hover:text-white/40 transition-colors duration-500">
+                        {col.desc}
+                      </span>
+                      <ArrowUpRight
+                        className="w-4 h-4 text-ink/20 group-hover:text-gold-400 group-hover:translate-x-0.5
+                                   group-hover:-translate-y-0.5 transition-all duration-300"
+                      />
+                    </div>
+                  </Link>
+                </AnimateReveal>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── Featured Products ── */}
-        <section className="bg-cream-50 py-28">
+        {/* ── Products ── */}
+        <section className="bg-surface-100 py-28">
           <div className="max-w-7xl mx-auto px-12">
-            <div className="flex items-end justify-between mb-16">
-              <div>
-                <span className="label-caps text-gold-500 block mb-4">Recién llegado</span>
-                <h2 className="font-serif text-ink" style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 300 }}>
-                  Nuevas joyas
-                </h2>
+            <AnimateReveal>
+              <div className="flex items-end justify-between mb-16">
+                <div>
+                  <p className="label-u text-gold-500 mb-4">Recién llegado</p>
+                  <h2
+                    className="font-serif text-ink"
+                    style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 400 }}
+                  >
+                    Nuevas piezas
+                  </h2>
+                </div>
+                <Link href="/productos" className="label-u text-ink-soft hover:text-gold-500 transition-colors flex items-center gap-2">
+                  Ver todas <ArrowUpRight className="w-3 h-3" />
+                </Link>
               </div>
-              <Link href="/productos" className="flex items-center gap-2 label-caps text-ink/40 hover:text-gold-500 transition-colors duration-300">
-                Ver todas <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
+            </AnimateReveal>
+
             {products.length > 0 ? (
-              <div className="grid grid-cols-4 gap-6">
-                {products.map((p) => <ProductCard key={p.id} product={p} />)}
+              <div className="grid grid-cols-4 gap-8">
+                {products.map((p, i) => (
+                  <AnimateReveal key={p.id} delay={i * 60}>
+                    <ProductCard product={p} />
+                  </AnimateReveal>
+                ))}
               </div>
             ) : (
-              <p className="text-center font-serif text-3xl text-ink/20 font-light py-20"
-                style={{ fontFamily: "var(--font-cormorant)" }}>
-                Los productos se mostrarán aquí una vez conectada la base de datos.
+              <p
+                className="text-center text-ink/20 py-20"
+                style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 300 }}
+              >
+                Los productos aparecerán aquí.
               </p>
             )}
           </div>
         </section>
 
-        {/* ── Brand Promise ── */}
-        <section className="bg-ink py-32">
-          <div className="max-w-4xl mx-auto px-12 text-center">
-            <span className="gold-line-lg mx-auto block mb-10" />
-            <h2 className="font-serif text-white font-light mb-8"
-              style={{ fontFamily: "var(--font-cormorant)", fontSize: "clamp(2rem,4vw,3.5rem)", lineHeight: 1.15 }}>
-              "Cada joya que sale de nuestro taller<br />
-              <em className="not-italic text-gold-400">lleva una historia contigo"</em>
-            </h2>
-            <p className="text-white/40 text-sm leading-relaxed max-w-md mx-auto mb-12">
-              Trabajamos con oro 10k de la más alta calidad, combinando técnicas artesanales con diseños contemporáneos que celebran la identidad guatemalteca.
-            </p>
-            <div className="grid grid-cols-3 gap-8 max-w-lg mx-auto mb-14">
-              {[{ val: "10k", label: "Oro puro" }, { val: "GT", label: "Hecho en Guatemala" }, { val: "∞", label: "Piezas únicas" }].map(({ val, label }) => (
-                <div key={label} className="text-center">
-                  <p className="font-serif text-gold-400 text-4xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>{val}</p>
-                  <p className="label-caps text-white/30 mt-2">{label}</p>
-                </div>
-              ))}
-            </div>
-            <Link href="/productos" className="btn-gold">
-              Descubrir la colección <ArrowRight className="w-4 h-4" />
-            </Link>
+        {/* ── Statement (dark) ── */}
+        <section className="bg-ink py-40">
+          <div className="max-w-5xl mx-auto px-12 text-center">
+            <AnimateReveal>
+              <span className="block w-12 h-px bg-gold-400 mx-auto mb-14 opacity-60" />
+              <p
+                className="font-serif text-white font-normal leading-[1.1]"
+                style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.2rem,5vw,4.5rem)", fontWeight: 400 }}
+              >
+                "Cada joya que nace en nuestro taller<br />
+                <em style={{ color: "var(--gold)", fontStyle: "italic" }}>
+                  lleva tu historia contigo"
+                </em>
+              </p>
+            </AnimateReveal>
+
+            <AnimateReveal delay={200}>
+              <div className="grid grid-cols-3 gap-12 max-w-md mx-auto mt-20 mb-14">
+                {[
+                  { v: "10k",  l: "Oro puro" },
+                  { v: "GT",   l: "Hecho en Guatemala" },
+                  { v: "∞",    l: "Piezas únicas" },
+                ].map(({ v, l }) => (
+                  <div key={l} className="text-center">
+                    <p
+                      className="font-serif text-gold-400 font-normal"
+                      style={{ fontFamily: "var(--font-serif)", fontSize: "2.5rem" }}
+                    >
+                      {v}
+                    </p>
+                    <p className="label-u text-white/30 mt-2">{l}</p>
+                  </div>
+                ))}
+              </div>
+              <Link href="/productos" className="btn-ghost-gold">
+                Descubrir la colección
+              </Link>
+            </AnimateReveal>
           </div>
         </section>
       </div>
 
-      {/* ════════════════════════════════════════════════════════
-          MOBILE LAYOUT — diseño exclusivo para móvil
-      ════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════
+          MOBILE — diseño exclusivo
+      ══════════════════════════════════════ */}
       <div className="md:hidden">
 
-        {/* ── Mobile Hero: full viewport, portrait ── */}
-        <section className="relative h-screen bg-ink flex flex-col justify-end overflow-hidden">
-          <div className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 120% 80% at 50% 30%, #2D1F0A 0%, #0D0B08 100%)" }}
-          />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full opacity-15"
-            style={{ background: "radial-gradient(circle, #D4A84B 0%, transparent 70%)" }}
-          />
-          <div className="relative z-10 px-7 pb-32 pt-24">
-            <div className="flex items-center gap-3 mb-8 animate-fade-up">
-              <span className="gold-line" />
-              <span className="label-caps text-gold-400" style={{ fontSize: "0.55rem" }}>Joyería Artesanal · Guatemala</span>
-            </div>
-            <h1 className="font-serif text-white animate-fade-up-delay-1"
-              style={{ fontFamily: "var(--font-cormorant)", fontSize: "3.8rem", fontWeight: 300, lineHeight: 0.9, letterSpacing: "-0.02em" }}>
-              Joyas<br />que<br /><em className="not-italic" style={{ color: "#D4A84B" }}>cuentan</em><br />historias
+        {/* ── Mobile Hero ── */}
+        <section className="relative min-h-screen bg-white flex flex-col justify-end overflow-hidden">
+          {/* rings */}
+          <div className="ring-deco" style={{ width: 420, height: 420, top: "38%", left: "50%", transform: "translate(-50%,-50%)" }} />
+          <div className="ring-deco" style={{ width: 260, height: 260, top: "38%", left: "50%", transform: "translate(-50%,-50%)", borderColor: "rgba(201,168,76,0.08)" }} />
+
+          <div className="relative z-10 px-7 pb-36 pt-24">
+            <p className="hero-a0 label-u text-ink-soft mb-8" style={{ letterSpacing: "0.22em", fontSize: "0.52rem" }}>
+              Joyería Artesanal · Guatemala
+            </p>
+            <h1
+              className="hero-a1 font-serif text-ink"
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(3.5rem,16vw,5.5rem)",
+                fontWeight: 400,
+                lineHeight: 0.88,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Diseñadas<br />
+              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>con alma</em>
             </h1>
-            <p className="text-white/40 text-xs leading-relaxed mt-6 mb-8 animate-fade-up-delay-2 max-w-[220px]">
+            <p className="hero-a2 text-ink-soft text-sm leading-relaxed mt-7 max-w-[220px]">
               Oro 10k hecho a mano en Guatemala. Cada pieza, única.
             </p>
-            <div className="flex flex-col gap-3 animate-fade-up-delay-3">
-              <Link href="/productos" className="btn-gold justify-center text-center">
-                Ver colección <ArrowRight className="w-4 h-4" />
+            <div className="hero-a3 flex flex-col gap-3 mt-8">
+              <Link href="/productos" className="btn-primary justify-center text-center">
+                Ver colección
               </Link>
-              <Link href="/productos?cat=coleccion-primavera" className="btn-outline-light justify-center text-center">
+              <Link href="/productos?cat=coleccion-primavera" className="btn-secondary justify-center text-center">
                 Colección Primavera
               </Link>
             </div>
           </div>
+
+          <div className="hero-a4 absolute bottom-24 right-7 flex flex-col items-center gap-2">
+            <div className="scroll-line" />
+          </div>
         </section>
 
-        {/* ── Mobile Collections: horizontal scroll ── */}
-        <section className="bg-cream py-12">
-          <div className="px-6 mb-6">
-            <span className="label-caps text-gold-500 block mb-2" style={{ fontSize: "0.55rem" }}>Colecciones</span>
-            <h2 className="font-serif text-ink text-3xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>
-              Explora
+        {/* ── Mobile Marquee ── */}
+        <div className="border-y border-surface-300 py-4 overflow-hidden bg-surface-100 select-none">
+          <div className="marquee-track">
+            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+              <span key={i} className="label-u text-ink-soft mx-8 flex items-center gap-8" style={{ fontSize: "0.5rem" }}>
+                {item} <span className="w-px h-2.5 bg-gold-300 inline-block" />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Mobile Collections ── */}
+        <section className="bg-white py-14">
+          <div className="px-7 mb-8">
+            <p className="label-u text-gold-500 mb-3" style={{ fontSize: "0.52rem" }}>Colecciones</p>
+            <h2
+              className="font-serif text-ink text-4xl font-normal"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              Explorar
             </h2>
           </div>
-          <div
-            className="flex gap-3 overflow-x-auto px-6 pb-4"
-            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
-          >
+          <div className="snap-x-container px-7 pb-2">
             {COLLECTIONS.map((col) => (
               <Link
                 key={col.slug}
                 href={`/productos?cat=${col.slug}`}
-                className="flex-none w-44 aspect-[2/3] bg-ink relative overflow-hidden flex flex-col justify-between p-5"
-                style={{ scrollSnapAlign: "start" }}
+                className="snap-x-item w-52 bg-surface-100 flex flex-col justify-between p-6 border border-surface-300 hover:border-gold-300 transition-colors duration-300"
+                style={{ aspectRatio: "3/4" }}
               >
-                <span className="label-caps text-gold-500" style={{ fontSize: "0.5rem" }}>{col.num}</span>
+                <span
+                  className="font-serif text-outline-gold text-4xl font-normal"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  {col.num}
+                </span>
                 <div>
-                  <p className="font-serif text-white text-xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>{col.label}</p>
-                  <p className="text-white/40 text-xs mt-0.5">{col.desc}</p>
+                  <p
+                    className="font-serif text-ink text-xl font-normal mb-1"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    {col.label}
+                  </p>
+                  <p className="label-u text-ink-soft" style={{ fontSize: "0.5rem" }}>{col.desc}</p>
                 </div>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* ── Mobile Products: horizontal carousel ── */}
-        <section className="bg-cream-50 py-12">
-          <div className="flex items-end justify-between px-6 mb-6">
+        {/* ── Mobile Products ── */}
+        <section className="bg-surface-100 py-14">
+          <div className="flex items-end justify-between px-7 mb-8">
             <div>
-              <span className="label-caps text-gold-500 block mb-2" style={{ fontSize: "0.55rem" }}>Recién llegado</span>
-              <h2 className="font-serif text-ink text-3xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>
-                Nuevas joyas
+              <p className="label-u text-gold-500 mb-3" style={{ fontSize: "0.52rem" }}>Recién llegado</p>
+              <h2
+                className="font-serif text-ink text-4xl font-normal"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
+                Nuevas piezas
               </h2>
             </div>
-            <Link href="/productos" className="label-caps text-ink/40 flex items-center gap-1" style={{ fontSize: "0.55rem" }}>
-              Ver todas <ArrowRight className="w-3 h-3" />
+            <Link href="/productos" className="label-u text-ink-soft flex items-center gap-1" style={{ fontSize: "0.5rem" }}>
+              Ver todas <ArrowUpRight className="w-3 h-3" />
             </Link>
           </div>
 
           {products.length > 0 ? (
-            <div
-              className="flex gap-4 overflow-x-auto px-6 pb-4"
-              style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
-            >
+            <div className="snap-x-container px-7 pb-2">
               {products.map((p) => (
-                <div key={p.id} className="flex-none w-44" style={{ scrollSnapAlign: "start" }}>
+                <div key={p.id} className="snap-x-item w-48">
                   <ProductCard product={p} />
                 </div>
               ))}
             </div>
           ) : (
-            <p className="px-6 text-ink/30 text-sm font-serif text-xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>
+            <p className="px-7 text-ink/25 text-2xl font-serif font-light" style={{ fontFamily: "var(--font-serif)" }}>
               Próximamente...
             </p>
           )}
         </section>
 
-        {/* ── Mobile Brand Promise ── */}
-        <section className="bg-ink py-20 px-8 text-center">
-          <span className="gold-line mx-auto block mb-8" />
-          <h2 className="font-serif text-white font-light mb-6"
-            style={{ fontFamily: "var(--font-cormorant)", fontSize: "2rem", lineHeight: 1.2 }}>
+        {/* ── Mobile Statement ── */}
+        <section className="bg-ink py-24 px-8 text-center">
+          <span className="block w-8 h-px bg-gold-500 mx-auto mb-10 opacity-60" />
+          <p
+            className="font-serif text-white font-normal mb-8 leading-[1.1]"
+            style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem,8vw,2.5rem)", fontWeight: 400 }}
+          >
             "Cada joya lleva<br />
-            <em className="not-italic text-gold-400">una historia contigo"</em>
-          </h2>
-          <p className="text-white/40 text-xs leading-relaxed max-w-xs mx-auto mb-10">
-            Oro 10k trabajado a mano desde nuestro taller en Guatemala.
+            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>tu historia"</em>
           </p>
-          <div className="grid grid-cols-3 gap-4 mb-10">
-            {[{ val: "10k", label: "Oro puro" }, { val: "GT", label: "Guatemala" }, { val: "∞", label: "Única" }].map(({ val, label }) => (
-              <div key={label}>
-                <p className="font-serif text-gold-400 text-3xl font-light" style={{ fontFamily: "var(--font-cormorant)" }}>{val}</p>
-                <p className="label-caps text-white/30 mt-1" style={{ fontSize: "0.5rem" }}>{label}</p>
-              </div>
-            ))}
-          </div>
-          <Link href="/productos" className="btn-gold w-full justify-center">
-            Ver colección <ArrowRight className="w-4 h-4" />
+          <p className="label-u text-white/30 leading-loose mb-10" style={{ fontSize: "0.52rem" }}>
+            Oro 10k · Hecho a mano · Guatemala
+          </p>
+          <Link href="/productos" className="btn-ghost-gold w-full justify-center">
+            Ver colección
           </Link>
         </section>
       </div>

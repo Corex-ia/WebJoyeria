@@ -2,114 +2,193 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Design tokens ─── */
 :root {
-  --gold: #D4A84B;
-  --gold-light: #E4C87A;
-  --gold-dark: #A07020;
-  --ink: #0D0B08;
-  --cream: #F8F4EC;
+  --gold:        #C9A84C;
+  --gold-light:  #EDD680;
+  --ink:         #0A0A0A;
+  --ink-soft:    #6B6B6B;
+  --surface:     #F5F3EF;
+  --surface-50:  #FFFFFF;
+  --divider:     #E3DFD7;
+  --white:       #FFFFFF;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--cream);
+  background: var(--white);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Typography ─── */
-.heading-display {
-  font-family: var(--font-cormorant);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-}
-
-.heading-editorial {
-  font-family: var(--font-cormorant);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.1;
-}
-
-.label-caps {
-  font-family: var(--font-inter);
-  font-size: 0.65rem;
+/* ─── Label utility ─── */
+.label-u {
+  font-family: var(--font-inter, system-ui);
+  font-size: 0.6rem;
   font-weight: 500;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-/* ─── Buttons ─── */
+/* backward compat */
+.label-caps { @apply label-u; }
+
+/* ─── Buttons (Apple-inspired) ─── */
 @layer components {
-  .btn-gold {
-    @apply inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-ink font-medium px-8 py-3.5 transition-all duration-300 text-sm tracking-wide;
-    letter-spacing: 0.08em;
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-ink text-white px-8 py-3.5
+           transition-all duration-300 cursor-pointer;
+    font-family: var(--font-inter, system-ui);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--ink);
   }
-  .btn-outline-light {
-    @apply inline-flex items-center gap-2 border border-white/40 text-white hover:bg-white hover:text-ink font-medium px-8 py-3.5 transition-all duration-300 text-sm;
-    letter-spacing: 0.08em;
+  .btn-primary:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
   }
-  .btn-outline-dark {
-    @apply inline-flex items-center gap-2 border border-ink text-ink hover:bg-ink hover:text-cream font-medium px-8 py-3.5 transition-all duration-300 text-sm;
-    letter-spacing: 0.08em;
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 bg-transparent text-ink px-8 py-3.5
+           transition-all duration-300 cursor-pointer;
+    font-family: var(--font-inter, system-ui);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--ink);
   }
+  .btn-secondary:hover {
+    background: var(--ink);
+    color: white;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 bg-transparent text-white px-8 py-3.5
+           transition-all duration-300 cursor-pointer;
+    font-family: var(--font-inter, system-ui);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(255,255,255,0.35);
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .btn-ghost-gold {
+    @apply inline-flex items-center gap-2 bg-transparent px-8 py-3.5
+           transition-all duration-300 cursor-pointer;
+    font-family: var(--font-inter, system-ui);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1.5px solid var(--gold);
+  }
+  .btn-ghost-gold:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  /* Legacy aliases so cart / admin pages don't break */
+  .btn-gold          { @apply btn-primary; }
+  .btn-outline-light { @apply btn-ghost; }
+  .btn-outline-dark  { @apply btn-secondary; }
+
   .badge {
-    @apply text-xs font-medium px-2.5 py-1 tracking-wide;
+    @apply inline-block px-2.5 py-0.5 text-[0.55rem] font-medium tracking-widest uppercase;
   }
 }
 
-/* ─── Gold divider line ─── */
-.gold-line {
-  display: block;
-  width: 48px;
-  height: 1px;
-  background: var(--gold);
+/* ─── Scroll-reveal (AnimateReveal component) ─── */
+.ar {
+  transition:
+    opacity  1s   cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s  cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ar-up   { opacity: 0; transform: translateY(52px); }
+.ar-left { opacity: 0; transform: translateX(-40px); }
+.ar-fade { opacity: 0; }
+.ar.ar-in { opacity: 1; transform: none; }
+
+/* Delay helpers */
+.ar-d1 { transition-delay: 0.1s; }
+.ar-d2 { transition-delay: 0.2s; }
+.ar-d3 { transition-delay: 0.35s; }
+.ar-d4 { transition-delay: 0.5s; }
+
+/* ─── Hero entrance animations (CSS, fires on load) ─── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-a0 { animation: heroFadeUp 1s   cubic-bezier(0.16,1,0.3,1) 0.1s  both; }
+.hero-a1 { animation: heroFadeUp 1s   cubic-bezier(0.16,1,0.3,1) 0.3s  both; }
+.hero-a2 { animation: heroFadeUp 1s   cubic-bezier(0.16,1,0.3,1) 0.5s  both; }
+.hero-a3 { animation: heroFadeUp 1s   cubic-bezier(0.16,1,0.3,1) 0.7s  both; }
+.hero-a4 { animation: heroFadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.9s  both; }
+
+/* ─── Marquee ─── */
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-.gold-line-lg {
-  display: block;
-  width: 80px;
-  height: 1px;
-  background: var(--gold);
+/* ─── Scroll indicator ─── */
+.scroll-line {
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.2;
+  animation: scrollDrop 2.4s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%   { height: 0; opacity: 1; }
+  60%  { height: 3rem; opacity: 1; }
+  100% { height: 3rem; opacity: 0; }
 }
 
-/* ─── Animations ─── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ─── Decorative rings (CSS hero element) ─── */
+.ring-deco {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.15);
+  pointer-events: none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* ─── Horizontal snap scroll ─── */
+.snap-x-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.snap-x-container::-webkit-scrollbar { display: none; }
+.snap-x-item { scroll-snap-align: start; flex-shrink: 0; }
 
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-.animate-fade-up {
-  animation: fadeUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) both;
-}
-
-.animate-fade-up-delay-1 {
-  animation: fadeUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.15s both;
-}
-
-.animate-fade-up-delay-2 {
-  animation: fadeUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s both;
-}
-
-.animate-fade-up-delay-3 {
-  animation: fadeUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.45s both;
+/* ─── Outline text (large numerals) ─── */
+.text-outline-gold {
+  -webkit-text-stroke: 1px var(--gold);
+  color: transparent;
 }
 
 /* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--divider); }

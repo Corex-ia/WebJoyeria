@@ -16,7 +16,7 @@ export default function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-cream-50/95 backdrop-blur-md border-t border-cream-300 safe-area-pb">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-surface-300 safe-area-pb">
       <div className="grid grid-cols-4 h-16">
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;

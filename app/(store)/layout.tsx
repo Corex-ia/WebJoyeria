@@ -15,7 +15,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12">
             {/* Brand */}
             <div className="md:col-span-2">
-              <p className="font-serif text-3xl font-light text-white mb-2" style={{ fontFamily: "var(--font-cormorant)" }}>
+              <p className="font-serif text-3xl font-light text-white mb-2" style={{ fontFamily: "var(--font-serif)" }}>
                 Joyería Oasis
               </p>
               <span className="label-caps text-gold-400 block mb-6">Oro 10k · Guatemala</span>

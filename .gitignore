@@ -24,3 +24,4 @@
 .DS_Store
 *.pem
 npm-debug.log*
+.env*
