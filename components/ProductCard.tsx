@@ -11,6 +11,7 @@ import { useState } from "react";
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, setOpen } = useCart();
   const [added, setAdded] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
@@ -27,17 +28,19 @@ export default function ProductCard({ product }: { product: Product }) {
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
         {/* Image */}
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
-          {product.thumbnail_url ? (
+          {product.thumbnail_url && !imgError ? (
             <Image
               src={product.thumbnail_url}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+              onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl bg-gold-50">
-              💎
+            <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-gold-50">
+              <span className="text-5xl">💎</span>
+              <span className="text-xs text-gold-400 font-medium">Foto próximamente</span>
             </div>
           )}
           {hasDiscount && (
