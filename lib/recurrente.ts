@@ -35,7 +35,7 @@ export async function createCheckout(params: {
       "X-PUBLIC-KEY": PUBLIC_KEY,
       "X-SECRET-KEY": SECRET_KEY,
       "X-ORIGIN": SITE_URL,
-      "X-STORE": "Joyería Oasis",
+      "X-STORE": "Joyeria Oasis",
     },
     body: JSON.stringify({
       number: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
