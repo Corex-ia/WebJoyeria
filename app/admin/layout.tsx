@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers } from "lucide-react";
 
 const NAV = [
-  { href: "/admin",           label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/productos", label: "Productos", icon: Package },
-  { href: "/admin/pedidos",   label: "Pedidos",   icon: ShoppingBag },
-  { href: "/admin/cupones",   label: "Cupones",   icon: Tag },
-  { href: "/admin/resenas",   label: "Reseñas",   icon: Star },
+  { href: "/admin",             label: "Dashboard",   icon: LayoutDashboard },
+  { href: "/admin/productos",   label: "Productos",   icon: Package },
+  { href: "/admin/colecciones", label: "Colecciones", icon: Layers },
+  { href: "/admin/pedidos",     label: "Pedidos",     icon: ShoppingBag },
+  { href: "/admin/cupones",     label: "Cupones",     icon: Tag },
+  { href: "/admin/resenas",     label: "Reseñas",     icon: Star },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
