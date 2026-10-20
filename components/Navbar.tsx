@@ -26,6 +26,7 @@ export default function Navbar() {
     { href: "/productos?cat=coleccion-aurea",     label: "Aurea" },
     { href: "/productos?cat=coleccion-kids",      label: "Kids" },
     { href: "/acerca",                            label: "Nosotros" },
+    { href: "/contacto",                          label: "Contacto" },
   ];
 
   return (
