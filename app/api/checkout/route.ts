@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
     }
 
-    const origin = req.nextUrl.origin;
+    // Recurrente validates redirect URLs must match the registered store domain
+    const origin = process.env.RECURRENTE_ORIGIN || "https://joyeriaoasis.com";
 
     // Create order in DB
     const supabase = supabaseAdmin();
