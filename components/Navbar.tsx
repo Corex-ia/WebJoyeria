@@ -44,8 +44,8 @@ export default function Navbar() {
               <Image
                 src="/images/logo-oasis.png"
                 alt="Joyería Oasis"
-                width={160}
-                height={90}
+                width={88}
+                height={88}
                 className="object-contain mix-blend-multiply"
                 priority
               />
