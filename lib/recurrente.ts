@@ -4,7 +4,8 @@
 const API_URL = "https://aurora.codingtipi.com/pay/v1/recurrente";
 const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || "";
 const SECRET_KEY = process.env.RECURRENTE_SECRET_KEY || "";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://web-joyeria-xi.vercel.app";
+// Recurrente validates X-ORIGIN against the store's registered domain
+const SITE_URL = process.env.RECURRENTE_ORIGIN || "https://joyeriaoasis.com";
 
 export type RecurrenteCheckout = {
   id: string;
