@@ -54,8 +54,9 @@ export async function createCheckout(params: {
 
   if (!res.ok) {
     const err = await res.text();
-    const debugPayload = { number: String(params.orderNumber), amount: params.amount, SITE_URL, hasPublicKey: !!PUBLIC_KEY, hasSecretKey: !!SECRET_KEY };
-    console.error("Recurrente 400 debug:", JSON.stringify(debugPayload));
+    const debugBody = { number: String(params.orderNumber), description: params.description, correlative: String(params.orderNumber), amount: params.amount, currency: "GTQ", allowTransfer: params.allowTransfer ?? true, installments: "", billing: params.billing, success_url: params.successUrl, cancel_url: params.cancelUrl };
+    console.error("Recurrente full payload:", JSON.stringify(debugBody));
+    console.error("Recurrente headers:", JSON.stringify({ "X-PUBLIC-KEY": PUBLIC_KEY.slice(0,15) + "...", "X-SECRET-KEY": SECRET_KEY.slice(0,15) + "...", "X-ORIGIN": SITE_URL }));
     throw new Error(`Recurrente error ${res.status}: ${err}`);
   }
 
