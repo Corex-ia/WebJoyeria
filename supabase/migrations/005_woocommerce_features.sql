@@ -20,7 +20,7 @@ create table if not exists coupons (
 -- ─────────────────────────────────────────────
 create table if not exists product_reviews (
   id          uuid primary key default gen_random_uuid(),
-  product_id  uuid not null references products(id) on delete cascade,
+  product_id  integer not null references products(id) on delete cascade,
   author_name text not null,
   author_email text,
   rating      smallint not null check (rating between 1 and 5),
