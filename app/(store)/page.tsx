@@ -51,7 +51,7 @@ export default async function HomePage() {
           </div>
 
           {/* Text block — bottom-left editorial layout */}
-          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-40">
+          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-48">
             <div className="max-w-[52%]">
               <p className="label-u text-ink-soft mb-8 tracking-[0.3em]">
                 Joyas artesanales 100% guatemaltecas
@@ -61,10 +61,10 @@ export default async function HomePage() {
                 className="font-serif text-ink"
                 style={{
                   fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(1.75rem, 3.2vw, 3.2rem)",
+                  fontSize: "clamp(2.5rem, 4.5vw, 5rem)",
                   fontWeight: 400,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.025em",
                 }}
               >
                 Joyas que cuentan una historia:<br />
@@ -295,10 +295,10 @@ export default async function HomePage() {
               className="font-serif text-ink"
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(1.75rem, 8vw, 2.75rem)",
+                fontSize: "clamp(2.25rem, 9vw, 3.5rem)",
                 fontWeight: 400,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+                letterSpacing: "-0.025em",
               }}
             >
               Joyas que cuentan una historia:<br />

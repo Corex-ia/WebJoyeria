@@ -13,7 +13,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 72);
+    const onScroll = () => setScrolled(window.scrollY > 96);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -37,7 +37,7 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-[72px]">
+          <div className="flex items-center justify-between h-[96px]">
 
             {/* Logo */}
             <Link href="/" className="flex items-center group">
