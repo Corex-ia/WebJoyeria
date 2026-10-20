@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useState, useEffect } from "react";
 import CartDrawer from "./CartDrawer";
@@ -64,8 +64,15 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Right: cart + hamburger */}
+            {/* Right: search + cart + hamburger */}
             <div className="flex items-center gap-5">
+              <Link
+                href="/buscar"
+                className="p-1 text-ink hover:text-gold-500 transition-colors duration-200"
+                aria-label="Buscar"
+              >
+                <Search className="w-[18px] h-[18px]" />
+              </Link>
               <button
                 onClick={() => setOpen(true)}
                 className="relative p-1 text-ink hover:text-gold-500 transition-colors duration-200"

@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/recurrente";
 import type { Product } from "@/lib/supabase";
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductCard from "@/components/ProductCard";
+import ProductReviews from "@/components/ProductReviews";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -195,6 +196,9 @@ export default async function ProductoPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Reviews */}
+      <ProductReviews productId={String(product.id)} />
 
       {/* Related products */}
       {related.length > 0 && (
