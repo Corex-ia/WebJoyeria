@@ -42,11 +42,11 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center group">
               <Image
-                src="/images/logo-oasis.jpg"
+                src="/images/logo-oasis.png"
                 alt="Joyería Oasis"
-                width={110}
-                height={62}
-                className="object-contain rounded-sm"
+                width={160}
+                height={90}
+                className="object-contain mix-blend-multiply"
                 priority
               />
             </Link>
