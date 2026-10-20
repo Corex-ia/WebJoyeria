@@ -37,14 +37,14 @@ export async function POST(req: NextRequest) {
     const firstName = nameParts[0] ?? customer.name;
     const lastName = nameParts.slice(1).join(" ") || firstName;
 
-    // Recurrente requires a short numeric-friendly correlative (rejects UUIDs)
-    const shortCorrelative = String(Date.now()).slice(-8);
+    // Recurrente requires a short numeric correlative (rejects UUIDs)
+    const shortCorrelative = parseInt(String(Date.now()).slice(-8), 10);
 
     // Create Recurrente checkout — no success/cancel URLs (handled via merchant dashboard + webhook)
     const checkout = await createCheckout({
       orderNumber: shortCorrelative,
       amount: total,
-      description: `Orden ${shortCorrelative} — Joyería Oasis`,
+      description: `Orden ${shortCorrelative} — Joyeria Oasis`,
       billing: {
         name: firstName,
         surname: lastName,

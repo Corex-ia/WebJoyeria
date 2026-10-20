@@ -1,6 +1,7 @@
 // Recurrente — pasarela de pago guatemalteca
 // API: https://aurora.codingtipi.com/pay/v1/recurrente
-// success_url/cancel_url NOT sent — handled via Recurrente dashboard + webhook
+// Key insight: amount must be sent as string "375.00" (not numeric 375)
+// success_url/cancel_url not included — Recurrente rejects them; redirect configured in dashboard
 
 const API_URL = "https://aurora.codingtipi.com/pay/v1/recurrente";
 const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || "";
@@ -22,7 +23,7 @@ export type RecurrenteBilling = {
 };
 
 export async function createCheckout(params: {
-  orderNumber: string | number;
+  orderNumber: number;
   amount: number;
   description: string;
   billing: RecurrenteBilling;
@@ -38,9 +39,9 @@ export async function createCheckout(params: {
       "X-STORE": "Joyeria Oasis",
     },
     body: JSON.stringify({
-      number: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
+      number: params.orderNumber,
       description: params.description,
-      correlative: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
+      correlative: params.orderNumber,
       amount: params.amount.toFixed(2),
       currency: "GTQ",
       allowTransfer: params.allowTransfer ?? true,
