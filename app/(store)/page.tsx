@@ -36,7 +36,7 @@ export default async function HomePage() {
       <div className="hidden md:block">
 
         {/* ── Hero ── */}
-        <section className="relative bg-surface-200 flex items-center overflow-hidden" style={{ minHeight: "calc(100vh - 96px)", marginTop: "96px" }}>
+        <section className="relative bg-surface-200 flex items-center overflow-hidden" style={{ height: "800px", marginTop: "96px" }}>
           {/* Decorative gold diamond — subtle, centered background element */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
@@ -271,7 +271,7 @@ export default async function HomePage() {
       <div className="md:hidden">
 
         {/* ── Mobile Hero ── */}
-        <section className="relative bg-surface-200 flex flex-col justify-end overflow-hidden" style={{ minHeight: "calc(100vh - 96px)", marginTop: "96px" }}>
+        <section className="relative bg-surface-200 flex flex-col justify-end overflow-hidden" style={{ minHeight: "520px", marginTop: "96px" }}>
           {/* Background diamond */}
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none">
             <div style={{ width: 280, height: 280, border: "1px solid var(--gold)", transform: "rotate(45deg)" }} />
