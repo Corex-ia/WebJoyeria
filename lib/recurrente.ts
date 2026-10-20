@@ -54,8 +54,6 @@ export async function createCheckout(params: {
 
   if (!res.ok) {
     const err = await res.text();
-    console.error("Recurrente payload:", JSON.stringify({ PUBLIC_KEY: PUBLIC_KEY.slice(0,10), SITE_URL, amount: params.amount, orderNumber: params.orderNumber }));
-    console.error("Recurrente response:", res.status, err);
     throw new Error(`Recurrente error ${res.status}: ${err}`);
   }
 
