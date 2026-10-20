@@ -4,11 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { formatCurrency } from "@/lib/recurrente";
 import { useState, useEffect } from "react";
 import CartDrawer from "./CartDrawer";
 
 export default function Navbar() {
-  const { count, setOpen } = useCart();
+  const { count, total, setOpen } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -75,13 +76,20 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={() => setOpen(true)}
-                className="relative p-1 text-ink hover:text-gold-500 transition-colors duration-200"
+                className="relative flex items-center gap-2 p-1 text-ink hover:text-gold-500 transition-colors duration-200"
                 aria-label="Carrito"
               >
-                <ShoppingBag className="w-[18px] h-[18px]" />
-                {count() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gold-400 text-ink text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
-                    {count()}
+                <div className="relative">
+                  <ShoppingBag className="w-[18px] h-[18px]" />
+                  {count() > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-gold-400 text-ink text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
+                      {count()}
+                    </span>
+                  )}
+                </div>
+                {total() > 0 && (
+                  <span className="hidden sm:block label-u text-ink-soft" style={{ fontSize: "0.58rem" }}>
+                    {formatCurrency(total())}
                   </span>
                 )}
               </button>
