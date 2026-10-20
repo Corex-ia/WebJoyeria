@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useState, useEffect } from "react";
@@ -23,6 +24,7 @@ export default function Navbar() {
     { href: "/productos?cat=coleccion-primavera", label: "Primavera" },
     { href: "/productos?cat=coleccion-aurea",     label: "Aurea" },
     { href: "/productos?cat=coleccion-kids",      label: "Kids" },
+    { href: "/acerca",                            label: "Nosotros" },
   ];
 
   return (
@@ -38,16 +40,15 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-[72px]">
 
             {/* Logo */}
-            <Link href="/" className="flex flex-col leading-none group">
-              <span
-                className="font-serif text-xl font-normal tracking-wide text-ink group-hover:text-gold-500 transition-colors duration-300"
-                style={{ fontFamily: "var(--font-serif)" }}
-              >
-                Joyería Oasis
-              </span>
-              <span className="label-u text-ink-soft" style={{ fontSize: "0.5rem" }}>
-                Oro 10k · Guatemala
-              </span>
+            <Link href="/" className="flex items-center group">
+              <Image
+                src="/images/logo-oasis-transparent.png"
+                alt="Joyería Oasis"
+                width={120}
+                height={70}
+                className="object-contain"
+                priority
+              />
             </Link>
 
             {/* Desktop links */}
@@ -94,6 +95,9 @@ export default function Navbar() {
             <div className="px-6 py-6 space-y-5">
               <Link href="/" className="block label-u text-ink/70 py-1" onClick={() => setMobileOpen(false)}>
                 Inicio
+              </Link>
+              <Link href="/acerca" className="block label-u text-ink/70 hover:text-gold-500 py-1 transition-colors" onClick={() => setMobileOpen(false)}>
+                Nosotros
               </Link>
               {links.map((l) => (
                 <Link

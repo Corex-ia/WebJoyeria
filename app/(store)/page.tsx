@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
@@ -51,53 +52,55 @@ export default async function HomePage() {
 
           {/* Text block — bottom-left editorial layout */}
           <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-40">
-            <div className="max-w-3xl">
+            <div className="max-w-[52%]">
               <p className="label-u text-ink-soft mb-8 tracking-[0.3em]">
-                Joyería Artesanal · Guatemala · Oro 10k
+                Joyas artesanales 100% guatemaltecas
               </p>
 
               <h1
                 className="font-serif text-ink"
                 style={{
                   fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(4.5rem, 10vw, 9rem)",
+                  fontSize: "clamp(3rem, 7vw, 6.5rem)",
                   fontWeight: 400,
-                  lineHeight: 0.9,
+                  lineHeight: 1,
                   letterSpacing: "-0.03em",
                 }}
               >
-                Cada pieza,<br />
-                <em style={{ fontStyle: "italic", color: "var(--gold)" }}>una historia.</em>
+                Joyas que cuentan<br />
+                una historia:<br />
+                <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia y amor</em><br />
+                en cada detalle.
               </h1>
 
-              <div className="flex items-center gap-8 mt-12">
+              <p className="label-u text-ink-soft mt-6 mb-10" style={{ fontSize: "0.7rem" }}>
+                Desde 2011 · &quot;Diseñamos cada joya pensando en ti.&quot;
+              </p>
+
+              <div className="flex items-center gap-8">
                 <Link href="/productos" className="btn-primary">
-                  Descubrir colección
+                  Compra ahora
                 </Link>
                 <Link
                   href="/productos?cat=coleccion-primavera"
                   className="label-u text-ink-soft hover:text-ink transition-colors duration-200 flex items-center gap-2"
                 >
-                  Primavera 2025 <ArrowUpRight className="w-3 h-3" />
+                  Ver colecciones <ArrowUpRight className="w-3 h-3" />
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Right side — placeholder for future hero image */}
-          <div className="absolute top-0 right-0 w-[42%] h-full bg-[#E8E3D8] flex items-center justify-center">
-            <div className="text-center">
-              <div
-                className="mx-auto mb-4 opacity-20"
-                style={{
-                  width: 120,
-                  height: 120,
-                  border: "1px solid var(--gold)",
-                  transform: "rotate(45deg)",
-                }}
-              />
-              <p className="label-u text-ink/20" style={{ fontSize: "0.48rem" }}>Fotografía próximamente</p>
-            </div>
+          {/* Right side — hero photo */}
+          <div className="absolute top-0 right-0 w-[42%] h-full overflow-hidden">
+            <Image
+              src="/images/hero.jpg"
+              alt="Joyas artesanales Oasis"
+              fill
+              className="object-cover object-center"
+              priority
+              sizes="42vw"
+            />
           </div>
         </section>
 
@@ -218,14 +221,18 @@ export default async function HomePage() {
               <div className="flex-1">
                 <span className="block w-10 h-px bg-gold-500 mb-10" />
                 <p
-                  className="font-serif text-white font-normal leading-[1.1]"
+                  className="font-serif text-white font-normal leading-[1.1] mb-8"
                   style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 400 }}
                 >
-                  Cada joya que nace<br />
-                  en nuestro taller<br />
+                  Somos Fabricantes.<br />
                   <em style={{ color: "var(--gold)", fontStyle: "italic" }}>
-                    lleva tu historia.
+                    Desde 2011.
                   </em>
+                </p>
+                <p className="text-white/50 leading-relaxed max-w-sm" style={{ fontSize: "0.95rem" }}>
+                  Fabricamos tus joyas con procesos y mano de obra de alta calidad.
+                  Nuestros artesanos son joyeros con mucha experiencia y vocación,
+                  quienes fabrican cada pieza con sus manos y su corazón.
                 </p>
               </div>
 
@@ -248,8 +255,8 @@ export default async function HomePage() {
                     </div>
                   ))}
                 </div>
-                <Link href="/productos" className="btn-ghost-gold">
-                  Ver colección
+                <Link href="/acerca" className="btn-ghost-gold">
+                  Conocer nuestra historia
                 </Link>
               </div>
             </div>
@@ -269,36 +276,42 @@ export default async function HomePage() {
             <div style={{ width: 280, height: 280, border: "1px solid var(--gold)", transform: "rotate(45deg)" }} />
           </div>
 
-          {/* Bottom image area placeholder */}
-          <div className="absolute top-0 left-0 right-0 h-[55%] bg-[#E8E3D8] flex items-center justify-center">
-            <div className="text-center">
-              <div
-                className="mx-auto opacity-10"
-                style={{ width: 80, height: 80, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
-              />
-            </div>
+          {/* Top image area */}
+          <div className="absolute top-0 left-0 right-0 h-[55%] overflow-hidden">
+            <Image
+              src="/images/hero.jpg"
+              alt="Joyas artesanales Oasis"
+              fill
+              className="object-cover object-center"
+              priority
+              sizes="100vw"
+            />
           </div>
 
           <div className="relative z-10 px-7 pb-32 pt-8">
             <p className="label-u text-ink-soft mb-6" style={{ letterSpacing: "0.22em", fontSize: "0.52rem" }}>
-              Joyería · Guatemala · Oro 10k
+              Joyas artesanales · Guatemala · Oro 10k
             </p>
             <h1
               className="font-serif text-ink"
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(3rem, 14vw, 5rem)",
+                fontSize: "clamp(2.5rem, 11vw, 4.5rem)",
                 fontWeight: 400,
-                lineHeight: 0.9,
+                lineHeight: 1,
                 letterSpacing: "-0.03em",
               }}
             >
-              Cada pieza,<br />
-              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>una historia.</em>
+              Joyas que cuentan<br />
+              una historia:<br />
+              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elegancia<br />y amor.</em>
             </h1>
-            <div className="flex flex-col gap-3 mt-8">
+            <p className="label-u text-ink-soft mt-4 mb-6" style={{ fontSize: "0.6rem" }}>
+              Desde 2011 · Fabricamos en Guatemala
+            </p>
+            <div className="flex flex-col gap-3">
               <Link href="/productos" className="btn-primary justify-center text-center">
-                Descubrir colección
+                Compra ahora
               </Link>
             </div>
           </div>
@@ -388,11 +401,14 @@ export default async function HomePage() {
         <section className="bg-ink py-24 px-7">
           <span className="block w-8 h-px bg-gold-500 mb-10" />
           <p
-            className="font-serif text-white font-normal mb-10 leading-[1.1]"
+            className="font-serif text-white font-normal mb-4 leading-[1.1]"
             style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 8vw, 2.5rem)", fontWeight: 400 }}
           >
-            Cada joya lleva<br />
-            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>tu historia.</em>
+            Somos Fabricantes.<br />
+            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>Desde 2011.</em>
+          </p>
+          <p className="text-white/50 leading-relaxed mb-10 text-sm">
+            Fabricamos tus joyas con procesos de alta calidad y artesanos con vocación.
           </p>
           <div className="space-y-6 mb-10">
             {[
@@ -405,8 +421,8 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
-          <Link href="/productos" className="btn-ghost-gold w-full justify-center">
-            Ver colección
+          <Link href="/acerca" className="btn-ghost-gold w-full justify-center">
+            Conocer nuestra historia
           </Link>
         </section>
       </div>
