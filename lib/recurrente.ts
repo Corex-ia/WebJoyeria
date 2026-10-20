@@ -41,7 +41,7 @@ export async function createCheckout(params: {
       number: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
       description: params.description,
       correlative: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
-      amount: params.amount,
+      amount: params.amount.toFixed(2),
       currency: "GTQ",
       allowTransfer: params.allowTransfer ?? true,
       installments: "",
