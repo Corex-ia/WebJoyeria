@@ -11,8 +11,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
     }
 
-    // Recurrente validates redirect URLs must match the registered store domain
-    const origin = process.env.RECURRENTE_ORIGIN || "https://joyeriaoasis.com";
 
     // Create order in DB
     const supabase = supabaseAdmin();
@@ -42,19 +40,17 @@ export async function POST(req: NextRequest) {
     // Recurrente requires a short numeric-friendly correlative (rejects UUIDs)
     const shortCorrelative = String(Date.now()).slice(-8);
 
-    // Create Recurrente checkout
+    // Create Recurrente checkout — no success/cancel URLs (handled via merchant dashboard + webhook)
     const checkout = await createCheckout({
       orderNumber: shortCorrelative,
       amount: total,
-      description: `Pedido Joyería Oasis. Al finalizar tu pago serás redirigido de vuelta a la tienda.`,
+      description: `Orden ${shortCorrelative} — Joyería Oasis`,
       billing: {
         name: firstName,
         surname: lastName,
         email: customer.email,
         phone: customer.phone ?? "",
       },
-      successUrl: `${origin}/pedido/confirmado?order=${order.id}`,
-      cancelUrl: `${origin}/checkout`,
       allowTransfer: true,
     });
 

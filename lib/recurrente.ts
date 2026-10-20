@@ -1,5 +1,6 @@
 // Recurrente — pasarela de pago guatemalteca
 // API: https://aurora.codingtipi.com/pay/v1/recurrente
+// success_url/cancel_url NOT sent — handled via Recurrente dashboard + webhook
 
 const API_URL = "https://aurora.codingtipi.com/pay/v1/recurrente";
 const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || "";
@@ -25,8 +26,6 @@ export async function createCheckout(params: {
   amount: number;
   description: string;
   billing: RecurrenteBilling;
-  successUrl: string;
-  cancelUrl: string;
   allowTransfer?: boolean;
 }): Promise<RecurrenteCheckout> {
   const res = await fetch(`${API_URL}/checkouts`, {
@@ -47,16 +46,11 @@ export async function createCheckout(params: {
       allowTransfer: params.allowTransfer ?? true,
       installments: "",
       billing: params.billing,
-      success_url: params.successUrl,
-      cancel_url: params.cancelUrl,
     }),
   });
 
   if (!res.ok) {
     const err = await res.text();
-    const debugBody = { number: String(params.orderNumber), description: params.description, correlative: String(params.orderNumber), amount: params.amount, currency: "GTQ", allowTransfer: params.allowTransfer ?? true, installments: "", billing: params.billing, success_url: params.successUrl, cancel_url: params.cancelUrl };
-    console.error("Recurrente full payload:", JSON.stringify(debugBody));
-    console.error("Recurrente headers:", JSON.stringify({ "X-PUBLIC-KEY": PUBLIC_KEY.slice(0,15) + "...", "X-SECRET-KEY": SECRET_KEY.slice(0,15) + "...", "X-ORIGIN": SITE_URL }));
     throw new Error(`Recurrente error ${res.status}: ${err}`);
   }
 
