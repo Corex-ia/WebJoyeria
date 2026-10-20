@@ -61,13 +61,14 @@ export default async function HomePage() {
                 className="font-serif text-ink"
                 style={{
                   fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(2.5rem, 4.5vw, 5rem)",
+                  fontSize: "clamp(2.25rem, 3.8vw, 4rem)",
                   fontWeight: 400,
-                  lineHeight: 1.05,
+                  lineHeight: 1.1,
                   letterSpacing: "-0.025em",
                 }}
               >
-                Joyas que cuentan una historia:<br />
+                Joyas que cuentan<br />
+                una historia:<br />
                 <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia y amor</em><br />
                 en cada detalle.
               </h1>
