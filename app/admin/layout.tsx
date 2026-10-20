@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    const env = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? "Admin123";
+        const env = "Admin123";
     if (password === env) {
       sessionStorage.setItem("admin_auth", "1");
       setAuthed(true);
