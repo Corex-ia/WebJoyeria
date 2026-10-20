@@ -1,31 +1,32 @@
 // Recurrente — pasarela de pago guatemalteca
-// Docs: https://developers.recurrente.com
+// API: https://aurora.codingtipi.com/pay/v1/recurrente
 
-const API_URL = process.env.RECURRENTE_API_URL || "https://app.recurrente.com/api";
-// Recurrente uses two keys: public (X-PUBLIC-KEY) and secret (X-SECRET-KEY).
-// Set RECURRENTE_PUBLIC_KEY + RECURRENTE_SECRET_KEY, or fall back to RECURRENTE_API_KEY for both.
-const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || process.env.RECURRENTE_API_KEY || "";
-const SECRET_KEY = process.env.RECURRENTE_SECRET_KEY || process.env.RECURRENTE_API_KEY || "";
+const API_URL = "https://aurora.codingtipi.com/pay/v1/recurrente";
+const PUBLIC_KEY = process.env.RECURRENTE_PUBLIC_KEY || "";
+const SECRET_KEY = process.env.RECURRENTE_SECRET_KEY || "";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://web-joyeria-xi.vercel.app";
 
 export type RecurrenteCheckout = {
   id: string;
-  checkout_url: string;
+  url: string;
+  product: string;
 };
 
-export type RecurrenteItem = {
+export type RecurrenteBilling = {
   name: string;
-  description?: string;
-  amount_in_cents: number;
-  currency: string;
-  quantity: number;
-  image_url?: string;
+  surname: string;
+  email: string;
+  phone: string;
 };
 
 export async function createCheckout(params: {
-  items: RecurrenteItem[];
-  success_url: string;
-  cancel_url: string;
-  metadata?: Record<string, string>;
+  orderNumber: string | number;
+  amount: number;
+  description: string;
+  billing: RecurrenteBilling;
+  successUrl: string;
+  cancelUrl: string;
+  allowTransfer?: boolean;
 }): Promise<RecurrenteCheckout> {
   const res = await fetch(`${API_URL}/checkouts`, {
     method: "POST",
@@ -33,12 +34,20 @@ export async function createCheckout(params: {
       "Content-Type": "application/json",
       "X-PUBLIC-KEY": PUBLIC_KEY,
       "X-SECRET-KEY": SECRET_KEY,
+      "X-ORIGIN": SITE_URL,
+      "X-STORE": "Joyería Oasis",
     },
     body: JSON.stringify({
-      items: params.items,
-      success_url: params.success_url,
-      cancel_url: params.cancel_url,
-      metadata: params.metadata,
+      number: String(params.orderNumber),
+      description: params.description,
+      correlative: String(params.orderNumber),
+      amount: params.amount,
+      currency: "GTQ",
+      allowTransfer: params.allowTransfer ?? true,
+      installments: "",
+      billing: params.billing,
+      success_url: params.successUrl,
+      cancel_url: params.cancelUrl,
     }),
   });
 

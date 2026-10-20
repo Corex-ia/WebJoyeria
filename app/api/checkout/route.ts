@@ -33,26 +33,34 @@ export async function POST(req: NextRequest) {
 
     if (orderError) throw orderError;
 
+    // Split name into first/last for Recurrente billing
+    const nameParts = (customer.name as string).trim().split(" ");
+    const firstName = nameParts[0] ?? customer.name;
+    const lastName = nameParts.slice(1).join(" ") || firstName;
+
     // Create Recurrente checkout
     const checkout = await createCheckout({
-      items: items.map((i: { name: string; price: number; qty: number }) => ({
-        name: i.name,
-        amount_in_cents: Math.round(i.price * 100),
-        quantity: i.qty,
-        currency: "GTQ",
-      })),
-      success_url: `${origin}/pedido/confirmado?order=${order.id}`,
-      cancel_url: `${origin}/checkout`,
-      metadata: { order_id: order.id },
+      orderNumber: order.id,
+      amount: total,
+      description: `Pedido #${order.id} — Joyería Oasis. Al finalizar tu pago serás redirigido de vuelta a la tienda.`,
+      billing: {
+        name: firstName,
+        surname: lastName,
+        email: customer.email,
+        phone: customer.phone ?? "",
+      },
+      successUrl: `${origin}/pedido/confirmado?order=${order.id}`,
+      cancelUrl: `${origin}/checkout`,
+      allowTransfer: true,
     });
 
-    // Update order with recurrente id
+    // Update order with Recurrente checkout id
     await supabase
       .from("orders")
       .update({ recurrente_id: checkout.id })
       .eq("id", order.id);
 
-    return NextResponse.json({ checkout_url: checkout.checkout_url, order_id: order.id });
+    return NextResponse.json({ checkout_url: checkout.url, order_id: order.id });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("checkout error:", message);
