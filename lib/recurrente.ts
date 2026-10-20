@@ -54,6 +54,8 @@ export async function createCheckout(params: {
 
   if (!res.ok) {
     const err = await res.text();
+    const debugPayload = { number: String(params.orderNumber), amount: params.amount, SITE_URL, hasPublicKey: !!PUBLIC_KEY, hasSecretKey: !!SECRET_KEY };
+    console.error("Recurrente 400 debug:", JSON.stringify(debugPayload));
     throw new Error(`Recurrente error ${res.status}: ${err}`);
   }
 
