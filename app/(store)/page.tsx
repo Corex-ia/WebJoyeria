@@ -99,7 +99,8 @@ export default async function HomePage() {
               fill
               className="object-cover object-top"
               priority
-              sizes="42vw"
+              quality={95}
+              sizes="(max-width: 1280px) 42vw, 537px"
             />
           </div>
         </section>
