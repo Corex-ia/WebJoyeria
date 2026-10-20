@@ -36,7 +36,7 @@ export default async function HomePage() {
       <div className="hidden md:block">
 
         {/* ── Hero ── */}
-        <section className="relative min-h-screen bg-surface-200 flex items-end overflow-hidden">
+        <section className="relative bg-surface-200 flex items-center overflow-hidden" style={{ minHeight: "calc(100vh - 96px)", marginTop: "96px" }}>
           {/* Decorative gold diamond — subtle, centered background element */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
@@ -50,8 +50,8 @@ export default async function HomePage() {
             />
           </div>
 
-          {/* Text block — bottom-left editorial layout */}
-          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-28">
+          {/* Text block — centered editorial layout */}
+          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 py-16">
             <div className="max-w-[52%]">
               <p className="label-u text-ink-soft mb-8 tracking-[0.3em]">
                 Joyas artesanales 100% guatemaltecas
@@ -91,7 +91,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Right side — hero photo */}
+          {/* Right side — hero photo (starts at section top, not behind navbar) */}
           <div className="absolute top-0 right-0 w-[42%] h-full overflow-hidden">
             <Image
               src="/images/hero-banner.png"
@@ -270,7 +270,7 @@ export default async function HomePage() {
       <div className="md:hidden">
 
         {/* ── Mobile Hero ── */}
-        <section className="relative min-h-screen bg-surface-200 flex flex-col justify-end overflow-hidden">
+        <section className="relative bg-surface-200 flex flex-col justify-end overflow-hidden" style={{ minHeight: "calc(100vh - 96px)", marginTop: "96px" }}>
           {/* Background diamond */}
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none">
             <div style={{ width: 280, height: 280, border: "1px solid var(--gold)", transform: "rotate(45deg)" }} />
@@ -279,7 +279,7 @@ export default async function HomePage() {
           {/* Top image area */}
           <div className="absolute top-0 left-0 right-0 h-[55%] overflow-hidden">
             <Image
-              src="/images/hero.jpg"
+              src="/images/hero-banner.png"
               alt="Joyas artesanales Oasis"
               fill
               className="object-cover object-center"
