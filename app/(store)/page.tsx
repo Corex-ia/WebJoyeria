@@ -40,23 +40,24 @@ export default async function HomePage() {
           className="relative overflow-hidden"
           style={{ height: "860px", marginTop: "96px", background: "#F5F3EF" }}
         >
-          {/* Model photo — right side, bleeds edge, fades into background on left */}
-          <div className="absolute top-0 right-0 h-full overflow-hidden" style={{ width: "55%" }}>
+          {/* Model photo — right side, narrower so earring is fully visible */}
+          <div className="absolute top-0 right-0 h-full overflow-hidden" style={{ width: "46%" }}>
             <Image
               src="/images/hero-model-hd.jpg"
               alt="Modelo con arete de oro y perla — Joyería Oasis"
               fill
-              className="object-cover object-top"
+              className="object-cover"
+              style={{ objectPosition: "60% 12%" }}
               priority
               quality={95}
-              sizes="55vw"
+              sizes="46vw"
             />
             {/* Left fade: seamlessly blends model into background */}
             <div
               className="absolute inset-y-0 left-0 pointer-events-none"
               style={{
-                width: "260px",
-                background: "linear-gradient(to right, #F5F3EF 0%, #F5F3EF 20%, transparent 100%)",
+                width: "220px",
+                background: "linear-gradient(to right, #F5F3EF 0%, #F5F3EF 15%, transparent 100%)",
               }}
             />
           </div>
@@ -114,7 +115,7 @@ export default async function HomePage() {
             className="absolute z-30 hero-a4"
             style={{
               bottom: "72px",
-              left: "38%",
+              left: "42%",
               transform: "translateX(-50%) rotate(-1.5deg)",
               width: "310px",
               height: "215px",
