@@ -94,10 +94,10 @@ export default async function HomePage() {
           {/* Right side — hero photo (starts at section top, not behind navbar) */}
           <div className="absolute top-0 right-0 w-[42%] h-full overflow-hidden">
             <Image
-              src="/images/hero-banner.png"
-              alt="Joyas artesanales Oasis"
+              src="/images/hero-model-hd.jpg"
+              alt="Arete de oro y perla — Joyería Oasis"
               fill
-              className="object-cover object-right-top"
+              className="object-cover object-top"
               priority
               sizes="42vw"
             />
@@ -279,10 +279,10 @@ export default async function HomePage() {
           {/* Top image area */}
           <div className="absolute top-0 left-0 right-0 h-[55%] overflow-hidden">
             <Image
-              src="/images/hero-banner.png"
-              alt="Joyas artesanales Oasis"
+              src="/images/hero-model-hd.jpg"
+              alt="Arete de oro y perla — Joyería Oasis"
               fill
-              className="object-cover object-center"
+              className="object-cover object-top"
               priority
               sizes="100vw"
             />
