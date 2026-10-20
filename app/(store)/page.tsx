@@ -36,72 +36,116 @@ export default async function HomePage() {
       <div className="hidden md:block">
 
         {/* ── Hero ── */}
-        <section className="relative bg-surface-200 flex items-center overflow-hidden" style={{ height: "800px", marginTop: "96px" }}>
-          {/* Decorative gold diamond — subtle, centered background element */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div
-              className="opacity-[0.06]"
-              style={{
-                width: 480,
-                height: 480,
-                border: "1px solid var(--gold)",
-                transform: "rotate(45deg)",
-              }}
-            />
-          </div>
-
-          {/* Text block — centered editorial layout */}
-          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 py-16">
-            <div className="max-w-[52%]">
-              <p className="label-u text-ink-soft mb-8 tracking-[0.3em]">
-                Joyas artesanales 100% guatemaltecas
-              </p>
-
-              <h1
-                className="font-serif text-ink"
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(2.25rem, 3.8vw, 4rem)",
-                  fontWeight: 400,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.025em",
-                }}
-              >
-                Joyas que cuentan<br />
-                una historia:<br />
-                <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia y amor</em><br />
-                en cada detalle.
-              </h1>
-
-              <p className="label-u text-ink-soft mt-6 mb-10" style={{ fontSize: "0.7rem" }}>
-                Desde 2011 · &quot;Diseñamos cada joya pensando en ti.&quot;
-              </p>
-
-              <div className="flex items-center gap-8">
-                <Link href="/productos" className="btn-primary">
-                  Compra ahora
-                </Link>
-                <Link
-                  href="/productos?cat=coleccion-primavera"
-                  className="label-u text-ink-soft hover:text-ink transition-colors duration-200 flex items-center gap-2"
-                >
-                  Ver colecciones <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Right side — hero photo (starts at section top, not behind navbar) */}
-          <div className="absolute top-0 right-0 w-[42%] h-full overflow-hidden">
+        <section
+          className="relative overflow-hidden"
+          style={{ height: "860px", marginTop: "96px", background: "#F5F3EF" }}
+        >
+          {/* Model photo — right side, bleeds edge, fades into background on left */}
+          <div className="absolute top-0 right-0 h-full overflow-hidden" style={{ width: "55%" }}>
             <Image
               src="/images/hero-model-hd.jpg"
-              alt="Arete de oro y perla — Joyería Oasis"
+              alt="Modelo con arete de oro y perla — Joyería Oasis"
               fill
               className="object-cover object-top"
               priority
               quality={95}
-              sizes="(max-width: 1280px) 42vw, 537px"
+              sizes="55vw"
             />
+            {/* Left fade: seamlessly blends model into background */}
+            <div
+              className="absolute inset-y-0 left-0 pointer-events-none"
+              style={{
+                width: "260px",
+                background: "linear-gradient(to right, #F5F3EF 0%, #F5F3EF 20%, transparent 100%)",
+              }}
+            />
+          </div>
+
+          {/* Subtle background diamond — decorative */}
+          <div className="absolute inset-0 flex items-center justify-start pointer-events-none" style={{ paddingLeft: "8%" }}>
+            <div
+              className="opacity-[0.045]"
+              style={{ width: 520, height: 520, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
+            />
+          </div>
+
+          {/* Text block — editorial left layout */}
+          <div className="absolute inset-y-0 left-0 flex flex-col justify-center z-20" style={{ width: "50%", paddingLeft: "5.5rem", paddingRight: "3rem" }}>
+            <p className="label-u text-gold-500 mb-8 tracking-[0.3em] hero-a0" style={{ fontSize: "0.58rem" }}>
+              Joyas artesanales · Guatemala · Desde 2011
+            </p>
+
+            <h1
+              className="font-serif text-ink hero-a1"
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(2.5rem, 3.6vw, 4.25rem)",
+                fontWeight: 400,
+                lineHeight: 1.06,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Joyas que<br />
+              cuentan una<br />
+              historia:<br />
+              <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia<br />y amor.</em>
+            </h1>
+
+            <p className="label-u text-ink-soft mt-7 mb-10 hero-a2" style={{ fontSize: "0.62rem", maxWidth: "320px", lineHeight: 1.9 }}>
+              Diseñadas y fabricadas a mano por artesanos guatemaltecos.
+              Cada pieza es única e irrepetible.
+            </p>
+
+            <div className="flex items-center gap-8 hero-a3">
+              <Link href="/productos" className="btn-primary">
+                Compra ahora
+              </Link>
+              <Link
+                href="/productos?cat=coleccion-primavera"
+                className="label-u text-ink-soft hover:text-ink transition-colors duration-200 flex items-center gap-2"
+              >
+                Ver colecciones <ArrowUpRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Piece photo — floating editorial card at the junction of text + model */}
+          <div
+            className="absolute z-30 hero-a4"
+            style={{
+              bottom: "72px",
+              left: "38%",
+              transform: "translateX(-50%) rotate(-1.5deg)",
+              width: "310px",
+              height: "215px",
+              boxShadow: "0 28px 60px rgba(10,10,10,0.22), 0 4px 16px rgba(10,10,10,0.12)",
+            }}
+          >
+            <div className="relative w-full h-full overflow-hidden">
+              <Image
+                src="/images/hero-pieza-perla.jpg"
+                alt="Arete de oro 10k con perla natural — Joyería Oasis"
+                fill
+                className="object-cover"
+                quality={95}
+                sizes="310px"
+              />
+              {/* Thin gold inner frame */}
+              <div
+                className="absolute inset-[6px] pointer-events-none"
+                style={{ border: "1px solid rgba(201,168,76,0.4)" }}
+              />
+            </div>
+            {/* Label below the photo card */}
+            <div
+              className="absolute -bottom-8 left-0 right-0 flex items-center justify-center gap-3"
+            >
+              <span className="block h-px bg-gold-400" style={{ width: "28px" }} />
+              <span className="label-u text-gold-500" style={{ fontSize: "0.5rem", letterSpacing: "0.28em" }}>
+                Colección Aurea
+              </span>
+              <span className="block h-px bg-gold-400" style={{ width: "28px" }} />
+            </div>
           </div>
         </section>
 
@@ -271,42 +315,72 @@ export default async function HomePage() {
       <div className="md:hidden">
 
         {/* ── Mobile Hero ── */}
-        <section className="relative bg-surface-200 flex flex-col justify-end overflow-hidden" style={{ minHeight: "520px", marginTop: "96px" }}>
-          {/* Background diamond */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none">
-            <div style={{ width: 280, height: 280, border: "1px solid var(--gold)", transform: "rotate(45deg)" }} />
-          </div>
-
-          {/* Top image area */}
-          <div className="absolute top-0 left-0 right-0 h-[55%] overflow-hidden">
+        <section
+          className="relative overflow-hidden"
+          style={{ minHeight: "600px", marginTop: "96px", background: "#F5F3EF" }}
+        >
+          {/* Model photo — upper 58% */}
+          <div className="absolute top-0 left-0 right-0 overflow-hidden" style={{ height: "58%" }}>
             <Image
               src="/images/hero-model-hd.jpg"
-              alt="Arete de oro y perla — Joyería Oasis"
+              alt="Modelo con arete — Joyería Oasis"
               fill
               className="object-cover object-top"
               priority
               sizes="100vw"
             />
+            {/* Bottom fade into background */}
+            <div
+              className="absolute bottom-0 left-0 right-0 pointer-events-none"
+              style={{ height: "80px", background: "linear-gradient(to bottom, transparent, #F5F3EF)" }}
+            />
           </div>
 
-          <div className="relative z-10 px-7 pb-32 pt-8">
-            <p className="label-u text-ink-soft mb-6" style={{ letterSpacing: "0.22em", fontSize: "0.52rem" }}>
+          {/* Piece photo — floating card overlapping the photo/text boundary */}
+          <div
+            className="absolute z-20"
+            style={{
+              top: "calc(58% - 56px)",
+              right: "24px",
+              width: "140px",
+              height: "100px",
+              boxShadow: "0 16px 40px rgba(10,10,10,0.25)",
+              transform: "rotate(1.5deg)",
+            }}
+          >
+            <div className="relative w-full h-full overflow-hidden">
+              <Image
+                src="/images/hero-pieza-perla.jpg"
+                alt="Arete de oro y perla"
+                fill
+                className="object-cover"
+                quality={90}
+                sizes="140px"
+              />
+              <div className="absolute inset-[4px]" style={{ border: "1px solid rgba(201,168,76,0.4)" }} />
+            </div>
+          </div>
+
+          {/* Text content */}
+          <div className="relative z-10 px-7 pb-12" style={{ paddingTop: "calc(58% - 10px)" }}>
+            <p className="label-u text-gold-500 mb-5" style={{ letterSpacing: "0.25em", fontSize: "0.5rem" }}>
               Joyas artesanales · Guatemala · Oro 10k
             </p>
             <h1
               className="font-serif text-ink"
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(2.25rem, 9vw, 3.5rem)",
+                fontSize: "clamp(2.1rem, 8.5vw, 3.2rem)",
                 fontWeight: 400,
-                lineHeight: 1.05,
+                lineHeight: 1.06,
                 letterSpacing: "-0.025em",
               }}
             >
-              Joyas que cuentan una historia:<br />
+              Joyas que cuentan<br />
+              una historia:<br />
               <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elegancia y amor.</em>
             </h1>
-            <p className="label-u text-ink-soft mt-4 mb-6" style={{ fontSize: "0.6rem" }}>
+            <p className="label-u text-ink-soft mt-4 mb-7" style={{ fontSize: "0.57rem" }}>
               Desde 2011 · Fabricamos en Guatemala
             </p>
             <div className="flex flex-col gap-3">
