@@ -91,7 +91,16 @@ export default async function AdminProductosPage() {
                       <span className="font-medium text-gold-500">{formatCurrency(p.price)}</span>
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <span className="label-u text-ink-soft">{p.stock ?? 0}</span>
+                      <span className={`label-u font-mono ${
+                        (p.stock ?? 0) <= 0
+                          ? "text-red-500"
+                          : (p.stock ?? 0) <= 3
+                          ? "text-amber-600"
+                          : "text-emerald-600"
+                      }`}>
+                        {p.stock ?? 0}
+                        {(p.stock ?? 0) <= 0 && " ⚠"}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`label-u inline-block px-2 py-0.5 ${

@@ -13,20 +13,22 @@ export default function ProductCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const [imgError, setImgError] = useState(false);
 
+  const hasDiscount = product.sale_price && product.sale_price < product.price;
+  const outOfStock = product.stock !== undefined && product.stock !== null && product.stock <= 0;
+
   function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
+    if (outOfStock) return;
     addItem(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
     setOpen(true);
   }
 
-  const hasDiscount = product.sale_price && product.sale_price < product.price;
-
   return (
     <Link href={`/productos/${product.slug}`} className="group block">
       {/* Image container */}
-      <div className="relative aspect-square overflow-hidden bg-surface-100">
+      <div className={`relative aspect-square overflow-hidden bg-surface-100 ${outOfStock ? "opacity-70" : ""}`}>
         {product.thumbnail_url && !imgError ? (
           <Image
             src={product.thumbnail_url}
@@ -48,30 +50,39 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         )}
 
+        {/* Out of stock badge */}
+        {outOfStock && (
+          <span className="absolute top-3 left-3 label-u bg-gray-500 text-white px-2.5 py-1">
+            Agotado
+          </span>
+        )}
+
         {/* Sale badge */}
-        {hasDiscount && (
+        {!outOfStock && hasDiscount && (
           <span className="absolute top-3 left-3 label-u bg-ink text-white px-2.5 py-1">
             Oferta
           </span>
         )}
 
         {/* Add to cart — slides up on hover (desktop) */}
-        <div
-          className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0
-                     transition-transform duration-400 ease-spring hidden md:block"
-        >
-          <button
-            onClick={handleAdd}
-            className={`w-full py-3.5 label-u flex items-center justify-center gap-2 transition-colors duration-200 ${
-              added
-                ? "bg-emerald-700 text-white"
-                : "bg-ink text-white hover:bg-gold-400 hover:text-ink"
-            }`}
+        {!outOfStock && (
+          <div
+            className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0
+                       transition-transform duration-400 ease-spring hidden md:block"
           >
-            <Plus className="w-3 h-3" />
-            {added ? "¡Agregado!" : "Añadir al carrito"}
-          </button>
-        </div>
+            <button
+              onClick={handleAdd}
+              className={`w-full py-3.5 label-u flex items-center justify-center gap-2 transition-colors duration-200 ${
+                added
+                  ? "bg-emerald-700 text-white"
+                  : "bg-ink text-white hover:bg-gold-400 hover:text-ink"
+              }`}
+            >
+              <Plus className="w-3 h-3" />
+              {added ? "¡Agregado!" : "Añadir al carrito"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Product info */}
@@ -94,15 +105,18 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Mobile add button */}
       <button
         onClick={handleAdd}
+        disabled={outOfStock}
         className={`md:hidden w-full mt-2.5 py-2.5 label-u flex items-center justify-center gap-2
                     transition-colors duration-200 ${
-          added
+          outOfStock
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : added
             ? "bg-emerald-700 text-white"
             : "bg-surface-200 text-ink hover:bg-ink hover:text-white"
         }`}
       >
         <Plus className="w-3 h-3" />
-        {added ? "¡Listo!" : "Añadir"}
+        {outOfStock ? "Agotado" : added ? "¡Listo!" : "Añadir"}
       </button>
     </Link>
   );

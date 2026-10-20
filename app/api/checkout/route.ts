@@ -60,6 +60,22 @@ export async function POST(req: NextRequest) {
       .update({ recurrente_id: checkout.id })
       .eq("id", order.id);
 
+    // Decrement stock for each purchased item (non-blocking — order already placed)
+    for (const item of items as Array<{ id: string; quantity?: number }>) {
+      const qty = item.quantity ?? 1;
+      const { data: prod } = await supabase
+        .from("products")
+        .select("stock")
+        .eq("id", item.id)
+        .single();
+      if (prod !== null && prod.stock !== null) {
+        await supabase
+          .from("products")
+          .update({ stock: Math.max(0, (prod.stock as number) - qty) })
+          .eq("id", item.id);
+      }
+    }
+
     return NextResponse.json({ checkout_url: checkout.url, order_id: order.id });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
