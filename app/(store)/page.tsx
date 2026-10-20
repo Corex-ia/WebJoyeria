@@ -51,7 +51,7 @@ export default async function HomePage() {
           </div>
 
           {/* Text block — bottom-left editorial layout */}
-          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-48">
+          <div className="relative z-10 max-w-7xl w-full mx-auto px-12 pb-20 pt-28">
             <div className="max-w-[52%]">
               <p className="label-u text-ink-soft mb-8 tracking-[0.3em]">
                 Joyas artesanales 100% guatemaltecas
@@ -94,10 +94,10 @@ export default async function HomePage() {
           {/* Right side — hero photo */}
           <div className="absolute top-0 right-0 w-[42%] h-full overflow-hidden">
             <Image
-              src="/images/hero.jpg"
+              src="/images/hero-banner.png"
               alt="Joyas artesanales Oasis"
               fill
-              className="object-cover object-center"
+              className="object-cover object-right-top"
               priority
               sizes="42vw"
             />

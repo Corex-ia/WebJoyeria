@@ -31,7 +31,7 @@ export default function AcercaPage() {
 
       {/* ── Historia ── */}
       <section className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid md:grid-cols-2 gap-16 items-start">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid md:grid-cols-2 gap-16 items-start prose-justify">
           <div>
             <span className="block w-10 h-px bg-gold-500 mb-8" />
             <h2

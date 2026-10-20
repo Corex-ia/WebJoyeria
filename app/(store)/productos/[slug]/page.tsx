@@ -166,7 +166,7 @@ export default async function ProductoPage({ params }: Props) {
             {/* Description */}
             {product.description && (
               <div
-                className="mt-6 text-ink-soft text-sm leading-relaxed border-t border-surface-300 pt-6 prose prose-sm max-w-none"
+                className="mt-6 text-ink-soft text-sm leading-relaxed border-t border-surface-300 pt-6 prose prose-sm max-w-none prose-justify"
                 dangerouslySetInnerHTML={{ __html: product.description }}
               />
             )}

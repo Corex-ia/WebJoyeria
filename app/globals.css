@@ -188,6 +188,13 @@ body {
   color: transparent;
 }
 
+/* ─── Prose / body text — justified ─── */
+.prose-justify p,
+.text-body-justify {
+  text-align: justify;
+  hyphens: auto;
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
