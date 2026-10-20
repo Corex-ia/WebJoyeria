@@ -38,9 +38,9 @@ export async function createCheckout(params: {
       "X-STORE": "Joyería Oasis",
     },
     body: JSON.stringify({
-      number: String(params.orderNumber),
+      number: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
       description: params.description,
-      correlative: String(params.orderNumber),
+      correlative: typeof params.orderNumber === "string" ? parseInt(params.orderNumber, 10) || params.orderNumber : params.orderNumber,
       amount: params.amount,
       currency: "GTQ",
       allowTransfer: params.allowTransfer ?? true,
