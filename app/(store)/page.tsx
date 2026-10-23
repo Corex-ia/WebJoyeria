@@ -91,8 +91,8 @@ export default async function HomePage() {
               <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia y amor</em>
             </h1>
 
-            <p className="label-u text-ink-soft mt-7 mb-10 hero-a2" style={{ fontSize: "0.62rem", maxWidth: "320px", lineHeight: 1.9, textAlign: "justify", hyphens: "auto" }}>
-              Diseñadas y fabricadas a mano por artesanos guatemaltecos.
+            <p className="label-u text-ink-soft mt-7 mb-10 hero-a2" style={{ fontSize: "0.62rem", lineHeight: 2 }}>
+              Diseñadas y fabricadas a mano por artesanos guatemaltecos.<br />
               Cada pieza es única e irrepetible.
             </p>
 
