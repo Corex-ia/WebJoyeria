@@ -86,7 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-56 bg-ink text-white flex flex-col transform transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:relative lg:translate-x-0`}>
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
-          <Link href="/admin" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src="/images/logo-oasis.png"
               alt="Joyería Oasis"
