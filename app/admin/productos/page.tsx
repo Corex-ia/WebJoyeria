@@ -129,7 +129,11 @@ export default async function AdminProductosPage() {
                         <p className="label-u text-ink/25 mt-0.5" style={{ fontSize: "0.48rem" }}>{p.sku}</p>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
-                        <span className="label-u text-ink-soft">{p.category?.name ?? "—"}</span>
+                        {p.category ? (
+                          <span className="label-u text-ink-soft">{p.category.name}</span>
+                        ) : (
+                          <span className="label-u text-amber-600 flex items-center gap-1">⚠ Sin categoría</span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <span className="font-medium text-gold-500">{formatCurrency(p.price)}</span>

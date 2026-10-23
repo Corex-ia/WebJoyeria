@@ -30,7 +30,7 @@ const COLLECTIONS = [
   { slug: "coleccion-primavera", label: "Primavera",  sub: "Colección 2025",          accent: "bg-[#EDE9E1]" },
   { slug: "coleccion-aurea",     label: "Aurea",      sub: "Elegancia atemporal",      accent: "bg-[#E8E3D8]" },
   { slug: "coleccion-kids",      label: "Kids",       sub: "Joyas para los pequeños",  accent: "bg-[#F2EFE9]" },
-  { slug: "aretes",              label: "Aretes",     sub: "Diseños únicos y delicados", accent: "bg-[#EAE6DC]" },
+  { slug: "aretes-stud-perla",   label: "Aretes",     sub: "Diseños únicos y delicados", accent: "bg-[#EAE6DC]" },
 ];
 
 export default async function HomePage() {

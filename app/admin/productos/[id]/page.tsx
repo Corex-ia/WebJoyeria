@@ -161,6 +161,7 @@ export default function EditarProductoPage() {
           regular_price: form.regular_price ? parseFloat(form.regular_price) : null,
           sale_price: form.sale_price ? parseFloat(form.sale_price) : null,
           stock: parseInt(form.stock),
+          category_id: form.category_id ? parseInt(form.category_id) : null,
           thumbnail_url,
           images,
         }),
@@ -288,7 +289,37 @@ export default function EditarProductoPage() {
         {/* Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-          <textarea name="description" rows={4} value={form.description} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 resize-none" />
+          <textarea name="description" rows={4} value={form.description} onChange={handleChange} className="w-full border border-surface-300 px-4 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors resize-none" />
+        </div>
+
+        {/* Category — prominent, full-width */}
+        <div className={`border p-4 ${!form.category_id ? "border-amber-300 bg-amber-50" : "border-surface-300 bg-surface-100"}`}>
+          <div className="flex items-center justify-between mb-2">
+            <label className="label-u text-ink font-medium">
+              Colección / Categoría
+            </label>
+            {!form.category_id && (
+              <span className="label-u text-amber-700 flex items-center gap-1">
+                ⚠ Sin categoría — no aparecerá en los filtros
+              </span>
+            )}
+          </div>
+          <select
+            name="category_id"
+            value={form.category_id}
+            onChange={handleChange}
+            className={`w-full border px-3 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors bg-white ${
+              !form.category_id ? "border-amber-300" : "border-surface-300"
+            }`}
+          >
+            <option value="">— Seleccionar categoría —</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+          <p className="label-u text-ink-soft mt-1.5" style={{ fontSize: "0.52rem" }}>
+            Determina en qué colección aparece este producto en la tienda y los filtros.
+          </p>
         </div>
 
         {/* Prices */}
@@ -302,46 +333,37 @@ export default function EditarProductoPage() {
               <label className="block text-xs font-medium text-gray-700 mb-1">{f.label}</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Q</span>
-                <input name={f.name} type="number" step="0.01" min="0" required={f.required} value={form[f.name as keyof typeof form]} onChange={handleChange} className="w-full border border-gray-300 rounded-lg pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" placeholder="0.00" />
+                <input name={f.name} type="number" step="0.01" min="0" required={f.required} value={form[f.name as keyof typeof form]} onChange={handleChange} className="w-full border border-surface-300 pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors" placeholder="0.00" />
               </div>
             </div>
           ))}
         </div>
 
-        {/* SKU, Stock, Category, Status */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* SKU, Stock, Status */}
+        <div className="grid grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">SKU</label>
-            <input name="sku" value={form.sku} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" placeholder="JO-001" />
+            <input name="sku" value={form.sku} onChange={handleChange} className="w-full border border-surface-300 px-3 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors" placeholder="JO-001" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Stock (unidades disponibles)</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Stock (unidades)</label>
             <input
               name="stock"
               type="number"
               min="0"
               value={form.stock}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 font-mono"
+              className="w-full border border-surface-300 px-3 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors font-mono"
             />
             <p className="text-xs text-gray-400 mt-1">
               {parseInt(form.stock) <= 0
-                ? "⚠ El producto aparecerá como Agotado"
-                : `${form.stock} unidad${parseInt(form.stock) !== 1 ? "es" : ""} en inventario`}
+                ? "⚠ Aparecerá como Agotado"
+                : `${form.stock} ud${parseInt(form.stock) !== 1 ? "s" : ""} disponibles`}
             </p>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Categoría</label>
-            <select name="category_id" value={form.category_id} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 bg-white">
-              <option value="">Sin categoría</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Estado</label>
-            <select name="status" value={form.status} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 bg-white">
+            <select name="status" value={form.status} onChange={handleChange} className="w-full border border-surface-300 px-3 py-2.5 text-sm focus:outline-none focus:border-gold-400 transition-colors bg-white">
               <option value="publish">Activo</option>
               <option value="draft">Borrador</option>
             </select>
