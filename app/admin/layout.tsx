@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers, FolderOpen } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers, FolderOpen, CreditCard } from "lucide-react";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",   icon: LayoutDashboard },
@@ -12,6 +12,7 @@ const NAV = [
   { href: "/admin/categorias",  label: "Categorías",  icon: FolderOpen },
   { href: "/admin/colecciones", label: "Colecciones", icon: Layers },
   { href: "/admin/pedidos",     label: "Pedidos",     icon: ShoppingBag },
+  { href: "/admin/cobros",      label: "Cobros",      icon: CreditCard },
   { href: "/admin/cupones",     label: "Cupones",     icon: Tag },
   { href: "/admin/resenas",     label: "Reseñas",     icon: Star },
 ];
@@ -43,13 +44,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen bg-surface-200 flex items-center justify-center px-4">
         <div className="bg-white border border-surface-300 p-10 w-full max-w-sm">
           <div className="text-center mb-8">
-            <Image
-              src="/images/logo-oasis.png"
-              alt="Joyería Oasis"
-              width={72}
-              height={72}
-              className="mx-auto mb-3 object-contain mix-blend-multiply"
-            />
+            <Link href="/" tabIndex={-1}>
+              <Image
+                src="/images/logo-oasis.png"
+                alt="Joyería Oasis"
+                width={72}
+                height={72}
+                className="mx-auto mb-3 object-contain mix-blend-multiply hover:opacity-70 transition-opacity"
+              />
+            </Link>
             <h1
               className="font-serif text-ink text-xl"
               style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
