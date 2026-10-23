@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers, FolderOpen } from "lucide-react";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",   icon: LayoutDashboard },
   { href: "/admin/productos",   label: "Productos",   icon: Package },
+  { href: "/admin/categorias",  label: "Categorías",  icon: FolderOpen },
   { href: "/admin/colecciones", label: "Colecciones", icon: Layers },
   { href: "/admin/pedidos",     label: "Pedidos",     icon: ShoppingBag },
   { href: "/admin/cupones",     label: "Cupones",     icon: Tag },
@@ -101,7 +102,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 px-3 py-4 space-y-0.5">
           {NAV.map((item) => {
             const Icon = item.icon;
-            const active = pathname === item.href;
+            const active = item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

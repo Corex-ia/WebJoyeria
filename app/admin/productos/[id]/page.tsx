@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Star } from "lucide-react";
 import type { Category } from "@/lib/supabase";
 
 export default function EditarProductoPage() {
@@ -19,7 +19,6 @@ export default function EditarProductoPage() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
-  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const [form, setForm] = useState({
     name: "", slug: "", description: "", price: "", regular_price: "", sale_price: "",
@@ -63,6 +62,7 @@ export default function EditarProductoPage() {
     if (!file) return;
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
+    e.target.value = "";
   }
 
   function handleGalleryAdd(e: React.ChangeEvent<HTMLInputElement>) {
@@ -84,18 +84,44 @@ export default function EditarProductoPage() {
     setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
   }
 
-  async function uploadGalleryFiles(): Promise<string[]> {
-    const urls: string[] = [];
-    for (const file of galleryFiles) {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("product_slug", form.slug);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Error al subir imagen");
-      urls.push(data.url);
+  // "Usar como portada" for an existing gallery URL
+  function setExistingAsCover(idx: number) {
+    const url = galleryUrls[idx];
+    // Move old thumbnail to gallery if it exists and isn't already there
+    const oldThumb = form.thumbnail_url;
+    if (oldThumb) {
+      setGalleryUrls((prev) => {
+        const next = prev.filter((_, i) => i !== idx);
+        return oldThumb && !next.includes(oldThumb) ? [oldThumb, ...next] : next;
+      });
+    } else {
+      setGalleryUrls((prev) => prev.filter((_, i) => i !== idx));
     }
-    return urls;
+    setForm((p) => ({ ...p, thumbnail_url: url }));
+    setImagePreview(url);
+    setImageFile(null);
+  }
+
+  // "Usar como portada" for a pending (not yet uploaded) gallery file
+  function setNewAsCover(idx: number) {
+    const file = galleryFiles[idx];
+    const preview = galleryPreviews[idx];
+    // Current thumbnail file/preview goes to gallery if it was a new file
+    if (imageFile) {
+      setGalleryFiles((prev) => {
+        const next = prev.filter((_, i) => i !== idx);
+        return [imageFile, ...next];
+      });
+      setGalleryPreviews((prev) => {
+        const next = prev.filter((_, i) => i !== idx);
+        return [imagePreview ?? URL.createObjectURL(imageFile), ...next];
+      });
+    } else {
+      setGalleryFiles((prev) => prev.filter((_, i) => i !== idx));
+      setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
+    }
+    setImageFile(file);
+    setImagePreview(preview);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -114,9 +140,16 @@ export default function EditarProductoPage() {
         thumbnail_url = uploadData.url;
       }
 
-      setUploadingGallery(true);
-      const newGalleryUrls = await uploadGalleryFiles();
-      setUploadingGallery(false);
+      const newGalleryUrls: string[] = [];
+      for (const file of galleryFiles) {
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("product_slug", form.slug);
+        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "Error al subir imagen");
+        newGalleryUrls.push(data.url);
+      }
       const images = [...galleryUrls, ...newGalleryUrls];
 
       const res = await fetch(`/api/admin/products/${id}`, {
@@ -137,7 +170,6 @@ export default function EditarProductoPage() {
       router.push("/admin/productos");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error desconocido");
-      setUploadingGallery(false);
     } finally {
       setSaving(false);
     }
@@ -153,13 +185,21 @@ export default function EditarProductoPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 bg-white rounded-xl border border-gray-200 p-6">
-        {/* Thumbnail */}
+        {/* Thumbnail / portada */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Foto principal</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Foto de portada
+            <span className="ml-2 label-u text-gold-500 text-xs normal-case">Aparece en el catálogo</span>
+          </label>
           <div className="flex items-start gap-4">
-            <div className="w-28 h-28 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-gray-300">
+            <div className="relative w-28 h-28 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border-2 border-gold-400">
               {imagePreview ? (
-                <Image src={imagePreview} alt="Preview" width={112} height={112} className="w-full h-full object-cover" unoptimized />
+                <>
+                  <Image src={imagePreview} alt="Portada" width={112} height={112} className="w-full h-full object-cover" unoptimized />
+                  <span className="absolute bottom-1 left-1 bg-gold-500 text-white label-u px-1.5 py-0.5 flex items-center gap-1" style={{ fontSize: "0.45rem" }}>
+                    <Star className="w-2 h-2" /> Portada
+                  </span>
+                </>
               ) : (
                 <span className="text-3xl">📷</span>
               )}
@@ -175,40 +215,62 @@ export default function EditarProductoPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Galería de imágenes adicionales</label>
           <div className="flex flex-wrap gap-2 mb-2">
-            {/* Existing saved images */}
+            {/* Existing saved gallery images */}
             {galleryUrls.map((url, i) => (
-              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 group">
+              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 group flex-shrink-0">
                 <Image src={url} alt={`Imagen ${i + 1}`} width={80} height={80} className="w-full h-full object-cover" unoptimized />
-                <button
-                  type="button"
-                  onClick={() => removeExistingImage(i)}
-                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setExistingAsCover(i)}
+                    className="flex items-center gap-1 bg-gold-500 text-white rounded px-1.5 py-0.5 text-xs hover:bg-gold-400"
+                    title="Usar como portada"
+                  >
+                    <Star className="w-2.5 h-2.5" /> Portada
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    className="text-white/80 hover:text-white"
+                    title="Eliminar"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
             {/* New images (not yet uploaded) */}
             {galleryPreviews.map((url, i) => (
-              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-dashed border-gold-400 group">
+              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-dashed border-gold-400 group flex-shrink-0">
                 <Image src={url} alt={`Nueva ${i + 1}`} width={80} height={80} className="w-full h-full object-cover" unoptimized />
-                <button
-                  type="button"
-                  onClick={() => removeNewImage(i)}
-                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setNewAsCover(i)}
+                    className="flex items-center gap-1 bg-gold-500 text-white rounded px-1.5 py-0.5 text-xs hover:bg-gold-400"
+                    title="Usar como portada"
+                  >
+                    <Star className="w-2.5 h-2.5" /> Portada
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeNewImage(i)}
+                    className="text-white/80 hover:text-white"
+                    title="Eliminar"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
             {/* Add button */}
-            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-gold-400 hover:bg-gold-50 transition-colors">
+            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-gold-400 hover:bg-gold-50 transition-colors flex-shrink-0">
               <Plus className="w-5 h-5 text-gray-400" />
               <span className="text-xs text-gray-400 mt-1">Agregar</span>
               <input type="file" accept="image/*" multiple onChange={handleGalleryAdd} className="hidden" />
             </label>
           </div>
-          <p className="text-xs text-gray-400">Las imágenes con borde dorado se subirán al guardar.</p>
+          <p className="text-xs text-gray-400">Pasa el cursor sobre una imagen para ver las opciones. Borde dorado = pendiente de subir.</p>
         </div>
 
         {/* Name */}
@@ -290,7 +352,7 @@ export default function EditarProductoPage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={saving} className="btn-gold">
-            {uploadingGallery ? "Subiendo imágenes..." : saving ? "Guardando..." : "Guardar cambios"}
+            {saving ? "Guardando..." : "Guardar cambios"}
           </button>
           <button type="button" onClick={() => router.back()} className="btn-outline">
             Cancelar
