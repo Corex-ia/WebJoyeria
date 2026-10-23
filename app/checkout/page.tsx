@@ -109,7 +109,25 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-100 pt-20">
+    <div className="min-h-screen bg-surface-100">
+      {/* Minimal header with store link */}
+      <header className="bg-white border-b border-surface-300 h-14 flex items-center px-6 lg:px-12 sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div
+              className="opacity-50 group-hover:opacity-80 transition-opacity"
+              style={{ width: 14, height: 14, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
+            />
+            <span className="font-serif text-ink text-sm" style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}>
+              Joyería Oasis
+            </span>
+          </Link>
+          <Link href="/productos" className="label-u text-ink-soft hover:text-gold-500 transition-colors text-xs flex items-center gap-1">
+            ← Seguir comprando
+          </Link>
+        </div>
+      </header>
+
       <div className="bg-surface-200 border-b border-surface-300 py-8 px-6 lg:px-12">
         <div className="max-w-6xl mx-auto">
           <p className="label-u text-gold-500 mb-2">Último paso</p>
