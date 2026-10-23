@@ -86,10 +86,9 @@ export default async function HomePage() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Joyas que<br />
-              cuentan una<br />
-              historia:<br />
-              <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia<br />y amor.</em>
+              Joyas que cuentan<br />
+              una historia:<br />
+              <em style={{ fontStyle: "italic", color: "var(--gold)" }}>elegancia y amor</em>
             </h1>
 
             <p className="label-u text-ink-soft mt-7 mb-10 hero-a2" style={{ fontSize: "0.62rem", maxWidth: "320px", lineHeight: 1.9 }}>
@@ -444,7 +443,7 @@ export default async function HomePage() {
             >
               Joyas que cuentan<br />
               una historia:<br />
-              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elegancia y amor.</em>
+              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elegancia y amor</em>
             </h1>
             <p className="label-u text-ink-soft mt-4 mb-7" style={{ fontSize: "0.57rem" }}>
               Desde 2011 · Fabricamos en Guatemala
