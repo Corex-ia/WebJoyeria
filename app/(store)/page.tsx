@@ -18,6 +18,14 @@ async function getFeaturedProducts(): Promise<Product[]> {
   return (data as Product[]) ?? [];
 }
 
+async function getCategoryImages(): Promise<Record<string, string | null>> {
+  const supabase = createClient();
+  const { data } = await supabase.from("categories").select("slug,image_url");
+  const map: Record<string, string | null> = {};
+  for (const row of data ?? []) map[row.slug] = row.image_url ?? null;
+  return map;
+}
+
 const COLLECTIONS = [
   { slug: "coleccion-primavera", label: "Primavera",  sub: "Colección 2025",          accent: "bg-[#EDE9E1]" },
   { slug: "coleccion-aurea",     label: "Aurea",      sub: "Elegancia atemporal",      accent: "bg-[#E8E3D8]" },
@@ -26,7 +34,7 @@ const COLLECTIONS = [
 ];
 
 export default async function HomePage() {
-  const products = await getFeaturedProducts();
+  const [products, categoryImages] = await Promise.all([getFeaturedProducts(), getCategoryImages()]);
 
   return (
     <>
@@ -182,43 +190,55 @@ export default async function HomePage() {
 
             {/* 2×2 tile grid */}
             <div className="grid grid-cols-2 gap-4">
-              {COLLECTIONS.map((col) => (
-                <Link
-                  key={col.slug}
-                  href={`/productos?cat=${col.slug}`}
-                  className={`group relative flex flex-col justify-end overflow-hidden ${col.accent}`}
-                  style={{ aspectRatio: "4/3" }}
-                >
-                  {/* Placeholder visual — centered diamond */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div
-                      className="opacity-[0.12] group-hover:opacity-[0.18] transition-opacity duration-500"
-                      style={{ width: 200, height: 200, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
-                    />
-                  </div>
-
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  {/* Text */}
-                  <div className="relative z-10 p-8">
-                    <p className="label-u text-gold-500 group-hover:text-gold-400 transition-colors duration-300 mb-2">
-                      {col.sub}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <h3
-                        className="font-serif text-ink group-hover:text-white transition-colors duration-500"
-                        style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 400, lineHeight: 1 }}
-                      >
-                        {col.label}
-                      </h3>
-                      <ArrowUpRight
-                        className="w-5 h-5 text-ink/30 group-hover:text-gold-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300"
+              {COLLECTIONS.map((col) => {
+                const imgUrl = categoryImages[col.slug] ?? null;
+                return (
+                  <Link
+                    key={col.slug}
+                    href={`/productos?cat=${col.slug}`}
+                    className={`group relative flex flex-col justify-end overflow-hidden ${imgUrl ? "" : col.accent}`}
+                    style={{ aspectRatio: "4/3" }}
+                  >
+                    {imgUrl ? (
+                      <Image
+                        src={imgUrl}
+                        alt={col.label}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        sizes="(max-width: 1280px) 50vw, 640px"
                       />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div
+                          className="opacity-[0.12] group-hover:opacity-[0.18] transition-opacity duration-500"
+                          style={{ width: 200, height: 200, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Overlay gradient — always visible when image present */}
+                    <div className={`absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-transparent ${imgUrl ? "opacity-100" : "opacity-0 group-hover:opacity-100"} transition-opacity duration-500`} />
+
+                    {/* Text */}
+                    <div className="relative z-10 p-8">
+                      <p className={`label-u mb-2 transition-colors duration-300 ${imgUrl ? "text-gold-300 group-hover:text-gold-200" : "text-gold-500 group-hover:text-gold-400"}`}>
+                        {col.sub}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <h3
+                          className={`font-serif transition-colors duration-500 ${imgUrl ? "text-white" : "text-ink group-hover:text-white"}`}
+                          style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 400, lineHeight: 1 }}
+                        >
+                          {col.label}
+                        </h3>
+                        <ArrowUpRight
+                          className={`w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 ${imgUrl ? "text-white/60 group-hover:text-gold-300" : "text-ink/30 group-hover:text-gold-400"}`}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -477,24 +497,38 @@ export default async function HomePage() {
 
           {/* Vertical stacked tiles on mobile */}
           <div className="space-y-3 px-7">
-            {COLLECTIONS.map((col) => (
-              <Link
-                key={col.slug}
-                href={`/productos?cat=${col.slug}`}
-                className={`group relative flex items-center justify-between overflow-hidden ${col.accent} px-6 py-5`}
-              >
-                <div>
-                  <p className="label-u text-gold-500 mb-1" style={{ fontSize: "0.5rem" }}>{col.sub}</p>
-                  <h3
-                    className="font-serif text-ink"
-                    style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 400 }}
-                  >
-                    {col.label}
-                  </h3>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-ink/30 group-hover:text-gold-500 transition-colors duration-200 flex-none" />
-              </Link>
-            ))}
+            {COLLECTIONS.map((col) => {
+              const imgUrl = categoryImages[col.slug] ?? null;
+              return (
+                <Link
+                  key={col.slug}
+                  href={`/productos?cat=${col.slug}`}
+                  className={`group relative flex items-center justify-between overflow-hidden ${imgUrl ? "" : col.accent} px-6 py-5`}
+                  style={{ minHeight: "72px" }}
+                >
+                  {imgUrl && (
+                    <Image
+                      src={imgUrl}
+                      alt={col.label}
+                      fill
+                      className="object-cover brightness-50"
+                      sizes="calc(100vw - 56px)"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-r from-ink/50 to-transparent" style={{ display: imgUrl ? "block" : "none" }} />
+                  <div className="relative z-10">
+                    <p className={`label-u mb-1 ${imgUrl ? "text-gold-300" : "text-gold-500"}`} style={{ fontSize: "0.5rem" }}>{col.sub}</p>
+                    <h3
+                      className={`font-serif ${imgUrl ? "text-white" : "text-ink"}`}
+                      style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 400 }}
+                    >
+                      {col.label}
+                    </h3>
+                  </div>
+                  <ArrowUpRight className={`w-4 h-4 flex-none relative z-10 ${imgUrl ? "text-white/60 group-hover:text-gold-300" : "text-ink/30 group-hover:text-gold-500"} transition-colors duration-200`} />
+                </Link>
+              );
+            })}
           </div>
 
           <div className="px-7 mt-6">
