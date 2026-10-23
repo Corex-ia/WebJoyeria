@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingBag, Tag, Star, LogOut, Menu, X, Layers, FolderOpen } from "lucide-react";
 
@@ -42,9 +43,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen bg-surface-200 flex items-center justify-center px-4">
         <div className="bg-white border border-surface-300 p-10 w-full max-w-sm">
           <div className="text-center mb-8">
-            <div
-              className="mx-auto mb-4 opacity-30"
-              style={{ width: 40, height: 40, border: "1px solid var(--gold)", transform: "rotate(45deg)" }}
+            <Image
+              src="/images/logo-oasis.png"
+              alt="Joyería Oasis"
+              width={72}
+              height={72}
+              className="mx-auto mb-3 object-contain mix-blend-multiply"
             />
             <h1
               className="font-serif text-ink text-xl"
