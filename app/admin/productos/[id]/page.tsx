@@ -3,17 +3,23 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import { X, Plus } from "lucide-react";
 import type { Category } from "@/lib/supabase";
 
 export default function EditarProductoPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  // Gallery state
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const [form, setForm] = useState({
     name: "", slug: "", description: "", price: "", regular_price: "", sale_price: "",
@@ -42,6 +48,7 @@ export default function EditarProductoPage() {
           thumbnail_url: p.thumbnail_url ?? "",
         });
         if (p.thumbnail_url) setImagePreview(p.thumbnail_url);
+        setGalleryUrls(Array.isArray(p.images) ? p.images : []);
       }
     });
   }, [id]);
@@ -56,6 +63,39 @@ export default function EditarProductoPage() {
     if (!file) return;
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
+  }
+
+  function handleGalleryAdd(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    const previews = files.map((f) => URL.createObjectURL(f));
+    setGalleryFiles((prev) => [...prev, ...files]);
+    setGalleryPreviews((prev) => [...prev, ...previews]);
+    e.target.value = "";
+  }
+
+  function removeExistingImage(idx: number) {
+    setGalleryUrls((prev) => prev.filter((_, i) => i !== idx));
+  }
+
+  function removeNewImage(idx: number) {
+    URL.revokeObjectURL(galleryPreviews[idx]);
+    setGalleryFiles((prev) => prev.filter((_, i) => i !== idx));
+    setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
+  }
+
+  async function uploadGalleryFiles(): Promise<string[]> {
+    const urls: string[] = [];
+    for (const file of galleryFiles) {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("product_slug", form.slug);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Error al subir imagen");
+      urls.push(data.url);
+    }
+    return urls;
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -74,6 +114,11 @@ export default function EditarProductoPage() {
         thumbnail_url = uploadData.url;
       }
 
+      setUploadingGallery(true);
+      const newGalleryUrls = await uploadGalleryFiles();
+      setUploadingGallery(false);
+      const images = [...galleryUrls, ...newGalleryUrls];
+
       const res = await fetch(`/api/admin/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -84,6 +129,7 @@ export default function EditarProductoPage() {
           sale_price: form.sale_price ? parseFloat(form.sale_price) : null,
           stock: parseInt(form.stock),
           thumbnail_url,
+          images,
         }),
       });
       const data = await res.json();
@@ -91,12 +137,11 @@ export default function EditarProductoPage() {
       router.push("/admin/productos");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error desconocido");
+      setUploadingGallery(false);
     } finally {
       setSaving(false);
     }
   }
-
-  if (loading) return <p className="text-gray-400 text-sm">Cargando...</p>;
 
   return (
     <div className="max-w-2xl">
@@ -108,9 +153,9 @@ export default function EditarProductoPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 bg-white rounded-xl border border-gray-200 p-6">
-        {/* Image upload */}
+        {/* Thumbnail */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Foto del producto</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Foto principal</label>
           <div className="flex items-start gap-4">
             <div className="w-28 h-28 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border-2 border-dashed border-gray-300">
               {imagePreview ? (
@@ -124,6 +169,46 @@ export default function EditarProductoPage() {
               <p className="text-xs text-gray-400 mt-1.5">JPG, PNG o WebP. Máx 5 MB.</p>
             </div>
           </div>
+        </div>
+
+        {/* Gallery */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Galería de imágenes adicionales</label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {/* Existing saved images */}
+            {galleryUrls.map((url, i) => (
+              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 group">
+                <Image src={url} alt={`Imagen ${i + 1}`} width={80} height={80} className="w-full h-full object-cover" unoptimized />
+                <button
+                  type="button"
+                  onClick={() => removeExistingImage(i)}
+                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ))}
+            {/* New images (not yet uploaded) */}
+            {galleryPreviews.map((url, i) => (
+              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-dashed border-gold-400 group">
+                <Image src={url} alt={`Nueva ${i + 1}`} width={80} height={80} className="w-full h-full object-cover" unoptimized />
+                <button
+                  type="button"
+                  onClick={() => removeNewImage(i)}
+                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ))}
+            {/* Add button */}
+            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-gold-400 hover:bg-gold-50 transition-colors">
+              <Plus className="w-5 h-5 text-gray-400" />
+              <span className="text-xs text-gray-400 mt-1">Agregar</span>
+              <input type="file" accept="image/*" multiple onChange={handleGalleryAdd} className="hidden" />
+            </label>
+          </div>
+          <p className="text-xs text-gray-400">Las imágenes con borde dorado se subirán al guardar.</p>
         </div>
 
         {/* Name */}
@@ -205,7 +290,7 @@ export default function EditarProductoPage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={saving} className="btn-gold">
-            {saving ? "Guardando..." : "Guardar cambios"}
+            {uploadingGallery ? "Subiendo imágenes..." : saving ? "Guardando..." : "Guardar cambios"}
           </button>
           <button type="button" onClick={() => router.back()} className="btn-outline">
             Cancelar

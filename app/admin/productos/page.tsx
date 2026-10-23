@@ -17,6 +17,9 @@ async function getProducts(): Promise<Product[]> {
 export default async function AdminProductosPage() {
   const products = await getProducts();
 
+  const outOfStock = products.filter((p) => p.status === "publish" && (p.stock ?? 0) <= 0);
+  const lowStock   = products.filter((p) => p.status === "publish" && (p.stock ?? 0) > 0 && (p.stock ?? 0) <= 3);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -33,6 +36,34 @@ export default async function AdminProductosPage() {
           + Nuevo producto
         </Link>
       </div>
+
+      {/* Stock alert summary */}
+      {(outOfStock.length > 0 || lowStock.length > 0) && (
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {outOfStock.length > 0 && (
+            <div className="flex items-center gap-3 border border-red-200 bg-red-50 px-4 py-3">
+              <span className="text-red-500 text-lg leading-none">⚠</span>
+              <div>
+                <p className="text-sm font-medium text-red-800">Sin stock</p>
+                <p className="label-u text-red-600 mt-0.5">
+                  {outOfStock.map((p) => p.name).join(", ")}
+                </p>
+              </div>
+            </div>
+          )}
+          {lowStock.length > 0 && (
+            <div className="flex items-center gap-3 border border-amber-200 bg-amber-50 px-4 py-3">
+              <span className="text-amber-500 text-lg leading-none">◐</span>
+              <div>
+                <p className="text-sm font-medium text-amber-800">Stock bajo (≤ 3 uds.)</p>
+                <p className="label-u text-amber-700 mt-0.5">
+                  {lowStock.map((p) => `${p.name} (${p.stock})`).join(", ")}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="bg-white border border-surface-300 overflow-hidden">
         {products.length === 0 ? (
@@ -61,69 +92,84 @@ export default async function AdminProductosPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-300">
-                {products.map((p) => (
-                  <tr key={p.id} className="hover:bg-surface-100 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="w-10 h-10 overflow-hidden bg-surface-200 flex-shrink-0">
-                        {p.thumbnail_url ? (
-                          <Image
-                            src={p.thumbnail_url}
-                            alt={p.name}
-                            width={40}
-                            height={40}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-gold-300 text-xs">◇</span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-ink line-clamp-1">{p.name}</p>
-                      <p className="label-u text-ink/25 mt-0.5" style={{ fontSize: "0.48rem" }}>{p.sku}</p>
-                    </td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="label-u text-ink-soft">{p.category?.name ?? "—"}</span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-gold-500">{formatCurrency(p.price)}</span>
-                    </td>
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      <span className={`label-u font-mono ${
-                        (p.stock ?? 0) <= 0
-                          ? "text-red-500"
-                          : (p.stock ?? 0) <= 3
-                          ? "text-amber-600"
-                          : "text-emerald-600"
-                      }`}>
-                        {p.stock ?? 0}
-                        {(p.stock ?? 0) <= 0 && " ⚠"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`label-u inline-block px-2 py-0.5 ${
-                        p.status === "publish"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-surface-200 text-ink-soft"
-                      }`}>
-                        {p.status === "publish" ? "Activo" : "Borrador"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <Link
-                          href={`/admin/productos/${p.id}`}
-                          className="label-u text-gold-500 hover:text-gold-400 transition-colors"
-                        >
-                          Editar
-                        </Link>
-                        <DeleteProductButton id={String(p.id)} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {products.map((p) => {
+                  const stockVal = p.stock ?? 0;
+                  const isOutOfStock = p.status === "publish" && stockVal <= 0;
+                  const isLowStock  = p.status === "publish" && stockVal > 0 && stockVal <= 3;
+                  return (
+                    <tr
+                      key={p.id}
+                      className={`transition-colors ${
+                        isOutOfStock
+                          ? "bg-red-50 hover:bg-red-100"
+                          : isLowStock
+                          ? "bg-amber-50 hover:bg-amber-100"
+                          : "hover:bg-surface-100"
+                      }`}
+                    >
+                      <td className="px-4 py-3">
+                        <div className="w-10 h-10 overflow-hidden bg-surface-200 flex-shrink-0">
+                          {p.thumbnail_url ? (
+                            <Image
+                              src={p.thumbnail_url}
+                              alt={p.name}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="text-gold-300 text-xs">◇</span>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-ink line-clamp-1">{p.name}</p>
+                        <p className="label-u text-ink/25 mt-0.5" style={{ fontSize: "0.48rem" }}>{p.sku}</p>
+                      </td>
+                      <td className="px-4 py-3 hidden md:table-cell">
+                        <span className="label-u text-ink-soft">{p.category?.name ?? "—"}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="font-medium text-gold-500">{formatCurrency(p.price)}</span>
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell">
+                        <span className={`label-u font-mono ${
+                          stockVal <= 0
+                            ? "text-red-600 font-bold"
+                            : stockVal <= 3
+                            ? "text-amber-600 font-bold"
+                            : "text-emerald-600"
+                        }`}>
+                          {stockVal}
+                          {stockVal <= 0 && " ⚠"}
+                          {stockVal > 0 && stockVal <= 3 && " ◐"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`label-u inline-block px-2 py-0.5 ${
+                          p.status === "publish"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-surface-200 text-ink-soft"
+                        }`}>
+                          {p.status === "publish" ? "Activo" : "Borrador"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/admin/productos/${p.id}`}
+                            className="label-u text-gold-500 hover:text-gold-400 transition-colors"
+                          >
+                            Editar
+                          </Link>
+                          <DeleteProductButton id={String(p.id)} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

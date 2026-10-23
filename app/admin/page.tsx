@@ -1,29 +1,47 @@
 import { createClient } from "@/lib/supabase";
 import { formatCurrency } from "@/lib/recurrente";
 import Link from "next/link";
-import { Package, ShoppingBag, Banknote } from "lucide-react";
+import { Package, ShoppingBag, Banknote, AlertTriangle } from "lucide-react";
 
 async function getStats() {
   const supabase = createClient();
-  const [{ count: productsCount }, { count: ordersCount }, { data: recentOrders }, { data: revenue }] = await Promise.all([
+  const [
+    { count: productsCount },
+    { count: ordersCount },
+    { data: recentOrders },
+    { data: revenue },
+    { count: outOfStockCount },
+    { count: lowStockCount },
+  ] = await Promise.all([
     supabase.from("products").select("*", { count: "exact", head: true }).eq("status", "publish"),
     supabase.from("orders").select("*", { count: "exact", head: true }),
     supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(5),
     supabase.from("orders").select("total").eq("status", "paid"),
+    supabase.from("products").select("*", { count: "exact", head: true }).eq("status", "publish").lte("stock", 0),
+    supabase.from("products").select("*", { count: "exact", head: true }).eq("status", "publish").gt("stock", 0).lte("stock", 3),
   ]);
 
   const totalRevenue = (revenue ?? []).reduce((s: number, o: { total: number }) => s + (o.total ?? 0), 0);
-  return { productsCount, ordersCount, recentOrders: recentOrders ?? [], totalRevenue };
+  return {
+    productsCount,
+    ordersCount,
+    recentOrders: recentOrders ?? [],
+    totalRevenue,
+    outOfStockCount: outOfStockCount ?? 0,
+    lowStockCount: lowStockCount ?? 0,
+  };
 }
 
 export default async function AdminDashboard() {
-  const { productsCount, ordersCount, recentOrders, totalRevenue } = await getStats();
+  const { productsCount, ordersCount, recentOrders, totalRevenue, outOfStockCount, lowStockCount } = await getStats();
 
   const stats = [
     { label: "Productos activos", value: productsCount ?? 0, Icon: Package,      href: "/admin/productos" },
     { label: "Pedidos totales",   value: ordersCount ?? 0,   Icon: ShoppingBag,  href: "/admin/pedidos" },
     { label: "Ingresos (pagado)", value: formatCurrency(totalRevenue), Icon: Banknote, href: "/admin/pedidos" },
   ];
+
+  const hasStockAlerts = outOfStockCount > 0 || lowStockCount > 0;
 
   return (
     <div>
@@ -41,6 +59,31 @@ export default async function AdminDashboard() {
           + Nuevo producto
         </Link>
       </div>
+
+      {/* Stock alerts */}
+      {hasStockAlerts && (
+        <div className="mb-6 border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 flex-none mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-amber-800">Alerta de inventario</p>
+            <div className="mt-1 flex flex-wrap gap-x-6 gap-y-1">
+              {outOfStockCount > 0 && (
+                <span className="text-sm text-red-700">
+                  <strong>{outOfStockCount}</strong> producto{outOfStockCount !== 1 ? "s" : ""} sin stock
+                </span>
+              )}
+              {lowStockCount > 0 && (
+                <span className="text-sm text-amber-700">
+                  <strong>{lowStockCount}</strong> producto{lowStockCount !== 1 ? "s" : ""} con stock bajo (≤ 3)
+                </span>
+              )}
+            </div>
+          </div>
+          <Link href="/admin/productos" className="label-u text-amber-600 hover:text-amber-700 transition-colors flex-none text-xs">
+            Ver productos →
+          </Link>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
